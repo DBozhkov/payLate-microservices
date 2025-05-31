@@ -16,7 +16,7 @@ spec:
         - name: admin-service
           image: dbozhkov/admin-service:latest
           ports:
-            - containerPort: 8087
+            - containerPort: 8440
 ---
 apiVersion: v1
 kind: Service
@@ -28,5 +28,5 @@ spec:
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 8087
+      targetPort: 8440
   type: ClusterIP

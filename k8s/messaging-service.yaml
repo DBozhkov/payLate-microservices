@@ -16,7 +16,7 @@ spec:
         - name: messaging-service
           image: dbozhkov/messaging-service:latest
           ports:
-            - containerPort: 8086
+            - containerPort: 8442
 ---
 apiVersion: v1
 kind: Service
@@ -28,5 +28,5 @@ spec:
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 8086
+      targetPort: 8442
   type: ClusterIP
