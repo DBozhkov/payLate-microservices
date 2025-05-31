@@ -35,8 +35,8 @@ export const ProductDetails = () => {
         const fetchProduct = async () => {
             try {
                 const endpoint = partner
-                    ? `${process.env.REACT_APP_API}/${partner}Products/${productId}`
-                    : `${process.env.REACT_APP_API}/products/${productId}`;
+                    ? `${process.env.REACT_APP_PRODUCT_API_URL}/${partner}Products/${productId}`
+                    : `${process.env.REACT_APP_PRODUCT_API_URL}/products/${productId}`;
 
                     console.log(`endpoint: ${endpoint}`);
 
@@ -74,7 +74,7 @@ export const ProductDetails = () => {
         const fetchReviews = async () => {
             try {
                 if (!productId) throw new Error("Missing product ID.");
-                const reviewUrl = `${process.env.REACT_APP_API}/reviews/search/findByProductId?productId=${productId}`;
+                const reviewUrl = `${process.env.REACT_APP_REVIEW_API_URL}/reviews/search/findByProductId?productId=${productId}`;
                 const response = await fetch(reviewUrl);
 
                 if (!response.ok) throw new Error("Failed to fetch reviews.");
@@ -112,7 +112,7 @@ export const ProductDetails = () => {
         const fetchUserReviewProduct = async () => {
             if (authState?.isAuthenticated) {
                 try {
-                    const url = `${process.env.REACT_APP_API}/reviews/secure/user/product?productId=${productId}`;
+                    const url = `${process.env.REACT_APP_REVIEW_API_URL}/reviews/secure/user/product?productId=${productId}`;
                     const requestOptions = {
                         method: "GET",
                         headers: {
@@ -142,7 +142,7 @@ export const ProductDetails = () => {
         const fetchCartItems = async () => {
             if (authState && authState.isAuthenticated) {
                 try {
-                    const url = `${process.env.REACT_APP_API}/cart`;
+                    const url = `${process.env.REACT_APP_CART_API_URL}/cart`;
                     const requestOptions = {
                         method: 'GET',
                         headers: {
@@ -182,7 +182,7 @@ export const ProductDetails = () => {
     }
 
     async function checkoutProduct() {
-        const url = `${process.env.REACT_APP_API}/products/secure/checkout?productId=${productId}`;
+        const url = `${process.env.REACT_APP_PRODUCT_API_URL}/products/secure/checkout?productId=${productId}`;
         const requestOptions = {
             method: 'PUT',
             headers: {
@@ -203,7 +203,7 @@ export const ProductDetails = () => {
     }
     async function addToCart() {
         const partnerValue = partner ?? ""; 
-        const url = `${process.env.REACT_APP_API}/cart/add?productId=${productId}&partner=${partnerValue}`;
+        const url = `${process.env.REACT_APP_CART_API_URL}/cart/add?productId=${productId}&partner=${partnerValue}`;
         const requestOptions = {
             method: 'POST',
             headers: {
@@ -241,7 +241,7 @@ export const ProductDetails = () => {
             return;
         }
 
-        const url = `${process.env.REACT_APP_API}/admin/secure/delete/product?productId=${productId}&partner=${partner}`;
+        const url = `${process.env.REACT_APP_ADMIN_API_URL}/admin/secure/delete/product?productId=${productId}&partner=${partner}`;
         const requestOptions = {
             method: 'DELETE',
             headers: {
@@ -272,7 +272,7 @@ export const ProductDetails = () => {
         console.log(product);
 
         const reviewRequestModel = new ReviewRequestModel(starinput, product.id, reviewDescription);
-        const url = `${process.env.REACT_APP_API}/reviews/secure?partner=${partner}`;
+        const url = `${process.env.REACT_APP_REVIEW_API_URL}/reviews/secure?partner=${partner}`;
         const requestOptions = {
             method: 'POST',
             headers: {

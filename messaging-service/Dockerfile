@@ -9,7 +9,7 @@ ARG JAR_FILE=target/messaging-service.jar
 COPY ${JAR_FILE} app.jar
 
 # Expose the port the application runs on
-EXPOSE 8086
+EXPOSE 8442
 
 # Run the application
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]

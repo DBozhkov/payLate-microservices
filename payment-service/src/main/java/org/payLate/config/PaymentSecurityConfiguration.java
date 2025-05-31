@@ -25,7 +25,7 @@ public class PaymentSecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth ->
                         auth
-                                .requestMatchers("/api/payment/**").authenticated()
+                                .requestMatchers("/api/payments/**").authenticated()
                                 .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(withDefaults()))

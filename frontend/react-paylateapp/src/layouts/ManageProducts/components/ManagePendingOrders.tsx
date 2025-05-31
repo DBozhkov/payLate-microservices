@@ -14,7 +14,7 @@ export const ManagePendingOrders: React.FC = () => {
         const fetchPendingOrders = async () => {
             if (authState && authState.isAuthenticated) {
                 try {
-                    const url = `${process.env.REACT_APP_API}/orders/pending`;
+                    const url = `${process.env.REACT_APP_ORDER_API_URL}/orders/pending`;
                     const requestOptions = {
                         method: "GET",
                         headers: {

@@ -13,7 +13,7 @@ export const PostMessage = () => {
     const [displaySuccess, setDisplaySuccess] = useState(false);
 
     async function submitNewQuestion() {
-        const url = `${process.env.REACT_APP_API}/messages/secure/add/message`;
+        const url = `${process.env.REACT_APP_MESSAGING_API_URL}/messages/secure/add/message`;
 
         if (!authState?.isAuthenticated) {
             setIsAuthenticated(false);

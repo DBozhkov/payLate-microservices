@@ -16,7 +16,7 @@ spec:
         - name: cart-service
           image: dbozhkov/cart-service:latest
           ports:
-            - containerPort: 8083
+            - containerPort: 8441
 ---
 apiVersion: v1
 kind: Service
@@ -28,5 +28,5 @@ spec:
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 8083
+      targetPort: 8441
   type: ClusterIP

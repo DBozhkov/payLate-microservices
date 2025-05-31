@@ -16,7 +16,7 @@ spec:
         - name: payment-service
           image: dbozhkov/payment-service:latest
           ports:
-            - containerPort: 8085
+            - containerPort: 8444
 ---
 apiVersion: v1
 kind: Service
@@ -28,5 +28,5 @@ spec:
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 8085
+      targetPort: 8444
   type: ClusterIP

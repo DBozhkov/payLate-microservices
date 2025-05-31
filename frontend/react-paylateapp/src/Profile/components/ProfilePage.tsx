@@ -13,7 +13,7 @@ const ProfilePage: React.FC = () => {
         if (authState?.isAuthenticated) {
             const fetchUserProfile = async () => {
                 try {
-                    const response = await fetch(`/api/user-account/${authState.idToken?.claims.sub}`, {
+                    const response = await fetch(`${process.env.REACT_APP_ADMIN_API_URL}/user-account/${authState.idToken?.claims.sub}`, {
                         headers: {
                             Authorization: `Bearer ${authState.accessToken?.accessToken}`,
                         },
@@ -57,7 +57,7 @@ const ProfilePage: React.FC = () => {
 
         setSaving(true);
         try {
-            const response = await fetch('/api/user-account', {
+            const response = await fetch(`${process.env.REACT_APP_ADMIN_API_URL}/user-account`, {
                 method: 'POST',
                 headers: {
                     Authorization: `Bearer ${authState.accessToken?.accessToken}`,

@@ -9,7 +9,7 @@ ARG JAR_FILE=target/cart-service.jar
 COPY ${JAR_FILE} app.jar
 
 # Expose the port the application runs on
-EXPOSE 8083
+EXPOSE 8441
 
 # Run the application
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]

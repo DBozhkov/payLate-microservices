@@ -16,8 +16,8 @@ export const UpdateCSV = () => {
             };
 
             try {
-                console.log(`Sending POST request to: ${process.env.REACT_APP_API}${url}`);
-                const response = await fetch(`${process.env.REACT_APP_API}${url}`, requestOptions);
+                console.log(`Sending POST request to: ${process.env.REACT_APP_PRODUCT_API_URL}${url}`);
+                const response = await fetch(`${process.env.REACT_APP_PRODUCT_API_URL}${url}`, requestOptions);
                 const responseBody = await response.text(); 
                 if (response.ok) {
                     setMessage('Products updated successfully');
@@ -45,8 +45,8 @@ export const UpdateCSV = () => {
             };
 
             try {
-                console.log(`Sending GET request to: ${process.env.REACT_APP_API}/csv/saveOlxProducts`);
-                const response = await fetch(`${process.env.REACT_APP_API}/csv/saveOlxProducts`, requestOptions);
+                console.log(`Sending GET request to: ${process.env.REACT_APP_PRODUCT_API_URL}/csv/saveOlxProducts`);
+                const response = await fetch(`${process.env.REACT_APP_PRODUCT_API_URL}/csv/saveOlxProducts`, requestOptions);
                 const responseBody = await response.text(); 
                 if (response.ok) {
                     setMessage('Products scraped and saved to CSV successfully');

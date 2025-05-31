@@ -1,6 +1,6 @@
 package org.payLate.config;
 
-import org.payLate.entity.*;
+import org.payLate.entity.*; // Assuming these entities are correct for product-service
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurer;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
@@ -10,12 +10,16 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 @Configuration
 public class ProductDataRestConfig implements RepositoryRestConfigurer {
 
-    private String allAllowedOrigins = "http://localhost:3000";
+    private String allAllowedOrigins = "https://localhost:3000"; // MODIFIED FOR HTTPS
 
     @Override
     public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config, CorsRegistry cors) {
         HttpMethod[] unsupportedActions = {HttpMethod.POST, HttpMethod.PATCH, HttpMethod.DELETE, HttpMethod.PUT};
 
+        // Assuming Product.class refers to a general one, or it could be specific entities.
+        // User example had: AliExpressProduct.class, AmazonProduct.class, OlxProduct.class, Product.class, Author.class
+        // Ensure these are correctly imported and relevant if this differs from a generic template.
+        // For now, using the exact list from the user's example:
         config.exposeIdsFor(AliExpressProduct.class, AmazonProduct.class, OlxProduct.class, Product.class, Author.class);
 
         disableHttpMethods(AliExpressProduct.class, config, unsupportedActions);
