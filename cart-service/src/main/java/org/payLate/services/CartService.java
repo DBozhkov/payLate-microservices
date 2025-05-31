@@ -7,6 +7,7 @@ import org.payLate.entity.Cart;
 import org.payLate.entity.CartItem;
 import org.payLate.repository.CartRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -23,9 +24,11 @@ public class CartService {
     private final WebClient orderServiceWebClient;
 
     @Autowired
-    public CartService(CartRepository cartRepository,
-                       WebClient productServiceWebClient,
-                       WebClient orderServiceWebClient) {
+    public CartService(
+            CartRepository cartRepository,
+            @Qualifier("productServiceWebClient") WebClient productServiceWebClient,
+            @Qualifier("orderServiceWebClient") WebClient orderServiceWebClient
+    ) {
         this.cartRepository = cartRepository;
         this.productServiceWebClient = productServiceWebClient;
         this.orderServiceWebClient = orderServiceWebClient;
@@ -125,7 +128,6 @@ public class CartService {
                 .bodyToMono(ProductDTO.class)
                 .block();
     }
-
 
     public void removeFromCart(String userEmail, Long productId) throws Exception {
         Optional<Cart> cartOptional = cartRepository.findByUserEmail(userEmail);

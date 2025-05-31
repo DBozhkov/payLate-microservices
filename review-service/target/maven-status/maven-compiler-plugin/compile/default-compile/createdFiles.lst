@@ -1,0 +1,10 @@
+com\paylateapp\config\ReviewDataRestConfig.class
+org\payLate\requestmodels\ReviewRequest.class
+org\payLate\Main.class
+org\payLate\controllers\ReviewController.class
+org\payLate\entity\Review.class
+org\payLate\config\WebClientConfig.class
+org\payLate\utils\JWTExtractor.class
+org\payLate\services\ReviewService.class
+org\payLate\repository\ReviewRepository.class
+org\payLate\config\ReviewSecurityConfiguration.class

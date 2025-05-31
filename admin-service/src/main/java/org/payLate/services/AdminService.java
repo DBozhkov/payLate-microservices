@@ -1,6 +1,7 @@
 package org.payLate.services;
 
 import org.payLate.requestModels.AddProductRequest;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -13,9 +14,11 @@ public class AdminService {
     private final WebClient cartServiceWebClient;
     private final WebClient reviewServiceWebClient;
 
-    public AdminService(WebClient productServiceWebClient,
-                        WebClient cartServiceWebClient,
-                        WebClient reviewServiceWebClient) {
+    public AdminService(
+            @Qualifier("productServiceWebClient") WebClient productServiceWebClient,
+            @Qualifier("cartServiceWebClient") WebClient cartServiceWebClient,
+            @Qualifier("reviewServiceWebClient") WebClient reviewServiceWebClient
+    ) {
         this.productServiceWebClient = productServiceWebClient;
         this.cartServiceWebClient = cartServiceWebClient;
         this.reviewServiceWebClient = reviewServiceWebClient;

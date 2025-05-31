@@ -4,6 +4,7 @@ import org.payLate.entity.Payment;
 import org.payLate.repository.PaymentRepository;
 import org.payLate.requestmodels.PaymentRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -17,17 +18,19 @@ public class PaymentService {
 
     private final PaymentRepository paymentRepository;
     private final WebClient stripeWebClient;
-    private final WebClient userOrderServiceWebClient;
+    private final WebClient orderServiceWebClient;
     private final WebClient cartServiceWebClient;
 
     @Autowired
-    public PaymentService(PaymentRepository paymentRepository,
-                          WebClient stripeWebClient,
-                          WebClient userOrderServiceWebClient,
-                          WebClient cartServiceWebClient) {
+    public PaymentService(
+            PaymentRepository paymentRepository,
+            @Qualifier("stripeWebClient") WebClient stripeWebClient,
+            @Qualifier("orderServiceWebClient") WebClient orderServiceWebClient,
+            @Qualifier("cartServiceWebClient") WebClient cartServiceWebClient
+    ) {
         this.paymentRepository = paymentRepository;
         this.stripeWebClient = stripeWebClient;
-        this.userOrderServiceWebClient = userOrderServiceWebClient;
+        this.orderServiceWebClient = orderServiceWebClient;
         this.cartServiceWebClient = cartServiceWebClient;
     }
 
@@ -47,7 +50,7 @@ public class PaymentService {
     }
 
     public Long createOrder(String userEmail) {
-        return userOrderServiceWebClient.post()
+        return orderServiceWebClient.post()
                 .uri("/api/orders/create")
                 .bodyValue(Map.of("userEmail", userEmail))
                 .retrieve()
@@ -56,7 +59,7 @@ public class PaymentService {
     }
 
     public void completePayment(String userEmail, Long orderId) throws Exception {
-        userOrderServiceWebClient.put()
+        orderServiceWebClient.put()
                 .uri("/api/orders/mark-as-paid")
                 .bodyValue(Map.of("userEmail", userEmail, "orderId", orderId))
                 .retrieve()

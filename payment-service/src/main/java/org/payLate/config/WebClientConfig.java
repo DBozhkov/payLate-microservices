@@ -8,34 +8,28 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Configuration
 public class WebClientConfig {
 
-    @Value("${order-service.url}")
-    private String orderServiceUrl;
-
-    @Value("${cart-service.url}")
-    private String cartServiceUrl;
-
-    @Value("${stripe.api.base-url}")
-    private String stripeBaseUrl;
-
     @Bean
-    public WebClient orderServiceWebClient() {
+    public WebClient orderServiceWebClient(@Value("${order-service.url}") String orderServiceUrl) {
         return WebClient.builder()
                 .baseUrl(orderServiceUrl)
                 .build();
     }
 
     @Bean
-    public WebClient cartServiceWebClient() {
+    public WebClient cartServiceWebClient(@Value("${cart-service.url}") String cartServiceUrl) {
         return WebClient.builder()
                 .baseUrl(cartServiceUrl)
                 .build();
     }
 
     @Bean
-    public WebClient stripeWebClient() {
+    public WebClient stripeWebClient(
+            @Value("${stripe.api.base-url}") String stripeBaseUrl,
+            @Value("${stripe.key.secret}") String stripeSecret
+    ) {
         return WebClient.builder()
                 .baseUrl(stripeBaseUrl)
-                .defaultHeader("Authorization", "Bearer " + "{stripe.key.secret}")
+                .defaultHeader("Authorization", "Bearer " + stripeSecret)
                 .build();
     }
 }

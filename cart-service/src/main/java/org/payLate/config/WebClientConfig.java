@@ -8,21 +8,15 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Configuration
 public class WebClientConfig {
 
-    @Value("${product-service.url}")
-    private String productServiceUrl;
-
-    @Value("${order-service.url}")
-    private String orderServiceUrl;
-
     @Bean
-    public WebClient productServiceWebClient() {
+    public WebClient productServiceWebClient(@Value("${product-service.url}") String productServiceUrl) {
         return WebClient.builder()
                 .baseUrl(productServiceUrl)
                 .build();
     }
 
     @Bean
-    public WebClient orderServiceWebClient() {
+    public WebClient orderServiceWebClient(@Value("${order-service.url}") String orderServiceUrl) {
         return WebClient.builder()
                 .baseUrl(orderServiceUrl)
                 .build();
