@@ -20,8 +20,8 @@ export const ProductList: React.FC = () => {
         const fetchProducts = async () => {
             try {
                 const baseEndpoint = partner
-                    ? `${process.env.REACT_APP_API}/${partner}Products`
-                    : `${process.env.REACT_APP_API}/products`;
+                    ? `${process.env.REACT_APP_PRODUCT_API_URL}/${partner}Products`
+                    : `${process.env.REACT_APP_PRODUCT_API_URL}/products`;
     
                 const endpoint = search
                     ? `${baseEndpoint}/search/findByProductNameContaining?productName=${search}&page=${currentPage - 1}&size=${productsPerPage}`

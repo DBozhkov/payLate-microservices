@@ -14,7 +14,7 @@ export const PreviousOrders: FC = () => {
         const fetchOrders = async () => {
             if (authState && authState.isAuthenticated) {
                 try {
-                    const url = `${process.env.REACT_APP_API}/orders/previous`;
+                    const url = `${process.env.REACT_APP_ORDER_API_URL}/orders/previous`;
                     console.log('Fetching orders from:', url);
 
                     const requestOptions = {

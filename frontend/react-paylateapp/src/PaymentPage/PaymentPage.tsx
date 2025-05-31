@@ -27,7 +27,7 @@ export const PaymentPage = () => {
       }
 
       try {
-        const url = `${process.env.REACT_APP_API}/orders/${orderId}`;
+        const url = `${process.env.REACT_APP_ORDER_API_URL}/orders/${orderId}`;
         const response = await fetch(url, {
           method: "GET",
           headers: {
@@ -66,7 +66,7 @@ export const PaymentPage = () => {
         userEmail || ""
       );
 
-      const url = `${process.env.REACT_APP_API}/api/payment/secure/payment-intent`;
+      const url = `${process.env.REACT_APP_PAYMENT_API_URL}/api/payment/secure/payment-intent`;
       const response = await fetch(url, {
         method: "POST",
         headers: {
@@ -97,7 +97,7 @@ export const PaymentPage = () => {
       if (result.error) {
         alert("Payment failed.");
       } else {
-        const completePaymentUrl = `${process.env.REACT_APP_API}/orders/complete-order`;
+        const completePaymentUrl = `${process.env.REACT_APP_ORDER_API_URL}/orders/complete-order`;
         const completeResponse = await fetch(completePaymentUrl, {
           method: "PUT",
           headers: {

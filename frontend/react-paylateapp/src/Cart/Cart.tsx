@@ -13,7 +13,7 @@ export const Cart = () => {
         const fetchCartItems = async () => {
             if (authState && authState.isAuthenticated) {
                 try {
-                    const url = `${process.env.REACT_APP_API}/cart`;
+                    const url = `${process.env.REACT_APP_CART_API_URL}/cart`;
                     console.log(`fetching url ${url}`);
                     const requestOptions = {
                         method: 'GET',

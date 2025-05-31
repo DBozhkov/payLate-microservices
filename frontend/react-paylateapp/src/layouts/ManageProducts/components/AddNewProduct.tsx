@@ -42,7 +42,7 @@ export const AddNewProduct = () => {
     }
 
     async function submitNewProduct() {
-        const url = `${process.env.REACT_APP_API}/admin/secure/add/product`;
+        const url = `${process.env.REACT_APP_ADMIN_API_URL}/admin/secure/add/product`;
         if (authState?.isAuthenticated && productName !== '' && price > 0 && category !== 'Category'
             && description !== '' && quantity > 0 && productType !== '') {
             const product: AddProductRequest = new AddProductRequest(
