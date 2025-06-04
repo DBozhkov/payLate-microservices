@@ -14,7 +14,8 @@ spec:
     spec:
       containers:
         - name: review-service
-          image: dbozhkov/review-service:latest
+          image: review-service:latest
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8446
 ---

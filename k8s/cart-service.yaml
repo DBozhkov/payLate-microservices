@@ -14,7 +14,8 @@ spec:
     spec:
       containers:
         - name: cart-service
-          image: dbozhkov/cart-service:latest
+          image: cart-service:latest
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8441
 ---

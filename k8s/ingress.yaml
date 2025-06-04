@@ -74,16 +74,6 @@ spec:
                 name: review-service
                 port:
                   number: 80
-    - host: af7c575ee9f9c4cb28835526672e6bee-1815048828.eu-central-1.elb.amazonaws.com
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: frontend
-                port:
-                  number: 80
     - http:
         paths:
           - path: /

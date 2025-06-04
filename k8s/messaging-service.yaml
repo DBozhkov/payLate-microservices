@@ -14,7 +14,8 @@ spec:
     spec:
       containers:
         - name: messaging-service
-          image: dbozhkov/messaging-service:latest
+          image: messaging-service:latest
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8442
 ---

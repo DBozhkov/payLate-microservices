@@ -14,7 +14,8 @@ spec:
     spec:
       containers:
         - name: product-service
-          image: dbozhkov/product-service:latest
+          image: product-service:latest
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8445
 ---

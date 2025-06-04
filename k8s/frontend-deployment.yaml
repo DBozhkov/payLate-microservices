@@ -14,7 +14,8 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: dbozhkov/paylate-frontend:latest
+          image: frontend-app:latest
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80
 ---

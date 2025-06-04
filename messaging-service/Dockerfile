@@ -11,5 +11,6 @@ COPY ${JAR_FILE} app.jar
 # Expose the port the application runs on
 EXPOSE 8442
 
+COPY ../../payLate-keystore.p12 /app/payLate-keystore.p12
 # Run the application
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]
