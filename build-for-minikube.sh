@@ -16,7 +16,7 @@ backend_services=(
 echo "Building and loading backend service images..."
 for service in "${backend_services[@]}"; do
   echo "Building $service:latest..."
-  docker build -t "$service:latest" "./$service"
+docker build -t "$service:latest" -f "./$service/Dockerfile" .
   echo "Loading $service:latest into Minikube..."
   minikube image load "$service:latest"
   echo "$service:latest processed."

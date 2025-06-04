@@ -5,12 +5,11 @@ FROM eclipse-temurin:21-jdk-jammy
 WORKDIR /app
 
 # Copy the application JAR file into the container
-ARG JAR_FILE=target/cart-service.jar
-COPY ${JAR_FILE} app.jar
+COPY cart-service/target/cart-service.jar app.jar
 
 # Expose the port the application runs on
 EXPOSE 8441
 
-COPY ../../payLate-keystore.p12 /app/payLate-keystore.p12
+COPY payLate-keystore.p12 /app/payLate-keystore.p12
 # Run the application
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]
