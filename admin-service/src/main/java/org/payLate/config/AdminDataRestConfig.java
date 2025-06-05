@@ -9,8 +9,9 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 @Configuration
 public class AdminDataRestConfig implements RepositoryRestConfigurer {
 
-    private String allAllowedOrigins = "https://localhost:3000";
+//    private String allAllowedOrigins = "https://localhost:3000";
 
+    private String[] allAllowedOrigins = {"https://paylate.com", "https://localhost:3000"};
     @Override
     public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config, CorsRegistry cors) {
         HttpMethod[] unsupportedActions = {HttpMethod.POST, HttpMethod.PATCH, HttpMethod.DELETE, HttpMethod.PUT};

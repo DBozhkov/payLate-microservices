@@ -1,4 +1,4 @@
-package com.paylateapp.config;
+package org.payLate.config;
 
 import org.payLate.entity.UserOrder;
 import org.springframework.context.annotation.Configuration;
@@ -10,7 +10,9 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 @Configuration
 public class OrderDataRestConfig implements RepositoryRestConfigurer {
 
-    private String allAllowedOrigins = "https://localhost:3000";
+//    private String allAllowedOrigins = "https://localhost:3000";
+
+    private String[] allAllowedOrigins = {"https://paylate.com", "https://localhost:3000"};
 
     @Override
     public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config, CorsRegistry cors) {

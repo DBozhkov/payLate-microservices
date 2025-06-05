@@ -11,7 +11,9 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 @Configuration
 public class MessagingDataRestConfig implements RepositoryRestConfigurer {
 
-    private String allAllowedOrigins = "https://localhost:3000";
+//    private String allAllowedOrigins = "https://localhost:3000";
+
+    private String[] allAllowedOrigins = {"https://paylate.com", "https://localhost:3000"};
 
     @Override
     public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config, CorsRegistry cors) {

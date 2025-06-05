@@ -3,6 +3,17 @@ kind: Ingress
 metadata:
   name: paylate-ingress
 spec:
+  tls:
+    - hosts:
+        - paylate.com
+        - admin-service
+        - cart-service
+        - messaging-service
+        - order-service
+        - payment-service
+        - product-service
+        - review-service
+      secretName: frontend-tls-secret
   rules:
     - host: admin-service
       http:
@@ -74,7 +85,8 @@ spec:
                 name: review-service
                 port:
                   number: 80
-    - http:
+    - host: paylate.com
+      http:
         paths:
           - path: /
             pathType: Prefix
