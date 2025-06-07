@@ -11,3 +11,12 @@ data:
     CREATE DATABASE IF NOT EXISTS paymentdb;
     CREATE DATABASE IF NOT EXISTS orderdb;
     CREATE DATABASE IF NOT EXISTS messagingdb;
+
+    GRANT ALL PRIVILEGES ON cartdb.* TO 'Mitko'@'%';
+    GRANT ALL PRIVILEGES ON reviewdb.* TO 'Mitko'@'%';
+    GRANT ALL PRIVILEGES ON admindb.* TO 'Mitko'@'%';
+    GRANT ALL PRIVILEGES ON productdb.* TO 'Mitko'@'%';
+    GRANT ALL PRIVILEGES ON paymentdb.* TO 'Mitko'@'%';
+    GRANT ALL PRIVILEGES ON orderdb.* TO 'Mitko'@'%';
+    GRANT ALL PRIVILEGES ON messagingdb.* TO 'Mitko'@'%';
+    FLUSH PRIVILEGES;
