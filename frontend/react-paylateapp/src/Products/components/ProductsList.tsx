@@ -16,6 +16,8 @@ export const ProductList: React.FC = () => {
     const [totalPages, setTotalPages] = useState(0);
     const [search, setSearch] = useState('');
 
+    console.log("API URL:", process.env.REACT_APP_PRODUCT_API_URL);
+
     useEffect(() => {
         const fetchProducts = async () => {
             try {
