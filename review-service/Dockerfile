@@ -10,6 +10,6 @@ COPY review-service/target/review-service.jar app.jar
 # Expose the port the application runs on
 EXPOSE 8446
 
-COPY payLate-keystore.p12 /app/payLate-keystore.p12
+COPY paylate-microservices.p12 /app/paylate-microservices.p12
 # Run the application
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]

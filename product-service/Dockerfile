@@ -10,6 +10,6 @@ COPY product-service/target/product-service.jar app.jar
 # Expose the port the application runs on
 EXPOSE 8445
 
-COPY payLate-keystore.p12 /app/payLate-keystore.p12
+COPY paylate-microservices.p12 /app/paylate-microservices.p12
 # Run the application
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]
