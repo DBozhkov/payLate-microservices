@@ -29,5 +29,5 @@ spec:
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 8444
+      targetPort: 80
   type: ClusterIP

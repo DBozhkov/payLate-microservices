@@ -3,19 +3,19 @@ kind: Ingress
 metadata:
   name: paylate-ingress
 spec:
-  tls:
-    - hosts:
-        - paylate.com
-        - admin-service
-        - cart-service
-        - messaging-service
-        - order-service
-        - payment-service
-        - product-service
-        - review-service
-      secretName: frontend-tls-secret
+#  tls:
+#    - hosts:
+#        - paylate.com
+#        - admin-service.paylate.com
+#        - cart-service.paylate.com
+#        - messaging-service.paylate.com
+#        - order-service.paylate.com
+#        - payment-service.paylate.com
+#        - product-service.paylate.com
+#        - review-service.paylate.com
+#      secretName: frontend-tls-secret
   rules:
-    - host: admin-service
+    - host: admin-service.paylate.com
       http:
         paths:
           - path: /api
@@ -25,7 +25,7 @@ spec:
                 name: admin-service
                 port:
                   number: 80
-    - host: cart-service
+    - host: cart-service.paylate.com
       http:
         paths:
           - path: /api
@@ -35,7 +35,7 @@ spec:
                 name: cart-service
                 port:
                   number: 80
-    - host: messaging-service
+    - host: messaging-service.paylate.com
       http:
         paths:
           - path: /api
@@ -45,7 +45,7 @@ spec:
                 name: messaging-service
                 port:
                   number: 80
-    - host: order-service
+    - host: order-service.paylate.com
       http:
         paths:
           - path: /api
@@ -55,7 +55,7 @@ spec:
                 name: order-service
                 port:
                   number: 80
-    - host: payment-service
+    - host: payment-service.paylate.com
       http:
         paths:
           - path: /api
@@ -65,7 +65,7 @@ spec:
                 name: payment-service
                 port:
                   number: 80
-    - host: product-service
+    - host: product-service.paylate.com
       http:
         paths:
           - path: /api
@@ -75,7 +75,7 @@ spec:
                 name: product-service
                 port:
                   number: 80
-    - host: review-service
+    - host: review-service.paylate.com
       http:
         paths:
           - path: /api
