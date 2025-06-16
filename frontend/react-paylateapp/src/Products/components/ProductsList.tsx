@@ -24,24 +24,30 @@ export const ProductList: React.FC = () => {
                 const baseEndpoint = partner
                     ? `${process.env.REACT_APP_PRODUCT_API_URL}/${partner}Products`
                     : `${process.env.REACT_APP_PRODUCT_API_URL}/products`;
-    
+
                 const endpoint = search
                     ? `${baseEndpoint}/search/findByProductNameContaining?productName=${search}&page=${currentPage - 1}&size=${productsPerPage}`
                     : `${baseEndpoint}?page=${currentPage - 1}&size=${productsPerPage}`;
-    
-                const response = await fetch(endpoint);
+
+                const accessToken = authState?.accessToken?.accessToken;
+
+                const headers: any = {};
+                if (accessToken) {
+                    headers['Authorization'] = `Bearer ${accessToken}`;
+                }
+
+                const response = await fetch(endpoint, { headers });
                 if (!response.ok) {
                     throw new Error("Failed to fetch products from the API.");
                 }
-    
+
                 const responseData = await response.json();
                 const loadedProducts = responseData._embedded
                     ? (partner ? responseData._embedded[`${partner}Products`] : responseData._embedded.products)
                     : [];
-    
+
                 const productList = loadedProducts.map((product: any) => {
-                    const id = product._links.self.href.split("/").pop(); 
-                    console.log(id);
+                    const id = product._links.self.href.split("/").pop();
                     return new ProductModel(
                         id,
                         product.price,
@@ -55,20 +61,21 @@ export const ProductList: React.FC = () => {
                         product.rating
                     );
                 });
-    
+
                 setProducts(productList);
                 setTotalProducts(responseData.page?.totalElements || 0);
                 setTotalPages(responseData.page?.totalPages || 0);
                 setIsLoading(false);
             } catch (error: any) {
-                console.error("Error fetching products:", error.message);
                 setIsLoading(false);
                 setHttpError(error.message);
             }
         };
-    
-        fetchProducts();
-    }, [partner, currentPage, search]);
+
+        if (authState?.isAuthenticated) {
+            fetchProducts();
+        }
+    }, [partner, currentPage, search, authState]);
 
     const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 

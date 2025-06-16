@@ -5,6 +5,9 @@ import { Spinner } from '../Utils/Spinner';
 
 const LoginWidget = ({ config }) => {
     const { oktaAuth, authState } = useOktaAuth();
+
+    console.log("LoginWidget authState:", authState);
+
     const onSuccess = (tokens) => {
         console.log('Access Token: ', tokens.accessToken.accessToken);
         console.log('ID Token: ', tokens.idToken.idToken);

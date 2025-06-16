@@ -4,7 +4,7 @@ export const oktaConfig = {
     redirectUri: window.location.origin + '/login/callback',
     scopes: ['openid', 'profile', 'email', 'manage', 'read'],
     pkce: true,
-    disableHttpsCheck: true,
+    disableHttpsCheck: false,
     debug: true,
     useClassicEngine: true,
 }
