@@ -1,27 +1,21 @@
 import { useEffect, useRef } from 'react';
 import OktaSignIn from '@okta/okta-signin-widget';
-import '@okta/okta-signin-widget/css/okta-sign-in.min.css';
 import { oktaConfig } from '../lib/oktaConfig';
 
 const OktaSignInWidget = ({ onSuccess, onError }) => {
-    const widgetRef = useRef(null);
+    const widgetRef = useRef();
 
     useEffect(() => {
-        const widget = new OktaSignIn({
-            baseUrl: oktaConfig.issuer.replace('/oauth2/default', ''),
-            clientId: oktaConfig.clientId,
-            redirectUri: oktaConfig.redirectUri,
-            authParams: {
-                pkce: true,
-                issuer: oktaConfig.issuer,
-                display: 'page',
-                scopes: oktaConfig.scopes,
-            },
-        });
+        const widget = new OktaSignIn(oktaConfig);
 
         widget.showSignInToGetTokens({
             el: widgetRef.current,
-        }).then(onSuccess).catch(onError);
+        })
+            .then(onSuccess)
+            .catch(err => {
+                console.error('Error displaying the widget: ', err);
+                onError(err);
+            });
 
         return () => widget.remove();
     }, []);
