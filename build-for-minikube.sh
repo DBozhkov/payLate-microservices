@@ -1,6 +1,7 @@
 #!/bin/bash
 
-# Ensure minikube is running and the 'minikube' command is in your PATH.
+# Make sure Minikube Docker is used!
+eval $(minikube docker-env)
 
 # Backend services
 backend_services=(
