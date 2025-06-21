@@ -28,8 +28,8 @@ const OktaSignInWidget = ({ onSuccess, onError }) => {
     useEffect(() => {
         const widget = new OktaSignIn(oktaConfig);
 
-        widget.showSignInToGetTokens({
-            el: '#sign-in-widget',
+        widget.showSignIn({
+            el: widgetRef.current,
         })
             .then(onSuccess)
             .catch((err) => {
@@ -40,17 +40,12 @@ const OktaSignInWidget = ({ onSuccess, onError }) => {
         return () => widget.remove();
     }, []);
 
-    //     return (
-    //         <div className='container mt-5 mb-5'>
-    //             <div ref={widgetRef}></div>
-    //         </div>
-    //     );
-
     return (
         <div className='container mt-5 mb-5'>
-            <div id="sign-in-widget"></div>
+            <div ref={widgetRef}></div>
         </div>
     );
+
 };
 
 export default OktaSignInWidget;
