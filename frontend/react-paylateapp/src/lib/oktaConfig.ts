@@ -6,5 +6,5 @@ export const oktaConfig = {
     pkce: true,
     disableHttpsCheck: true,
     debug: true,
-//     useClassicEngine: true,
+    useClassicEngine: true,
 }
