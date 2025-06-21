@@ -50,7 +50,7 @@ export const App = () => {
             <Route path='/products' element={<ProductList />} />
             <Route path='/cart' element={<Cart />} />
             <Route path='/checkout' element={<CheckoutPage />} />
-            <Route path='/login' element={<LoginWidget config={oktaConfig} />} />
+            <Route path='/login' element={<LoginWidget />} />
             <Route path='/login/callback' element={<LoginCallback />} />
             <Route path='/payment' element={<PaymentPage />} />
             <Route path='/orderHistory' element={<PreviousOrders />} />

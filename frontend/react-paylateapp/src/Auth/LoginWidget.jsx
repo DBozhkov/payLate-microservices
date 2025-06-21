@@ -1,36 +1,26 @@
 import { Navigate } from 'react-router-dom';
-import { useEffect, useRef } from 'react';
 import { useOktaAuth } from '@okta/okta-react';
 import OktaSignInWidget from './OktaSignInWidget';
 import { Spinner } from '../Utils/Spinner';
 
-const LoginWidget = ({ config }) => {
+const LoginWidget = () => {
     const { oktaAuth, authState } = useOktaAuth();
 
-    useEffect(() => {
-      console.log('authState:', authState);
-    }, [authState]);
-
     const onSuccess = (tokens) => {
-        console.log('Access Token: ', tokens.accessToken.accessToken);
-        console.log('ID Token: ', tokens.idToken.idToken);
+        console.log('Access Token: ', tokens.accessToken?.accessToken);
+        console.log('ID Token: ', tokens.idToken?.idToken);
         oktaAuth.handleLoginRedirect(tokens);
     };
 
     const onError = (err) => {
-        console.log('Sign in error: ', err);
-    }
+        console.error('Login error:', err);
+    };
 
-    if (!authState) {
-        return (
-            <Spinner />
-        );
-    }
+    if (!authState) return <Spinner />;
 
-    return authState.isAuthenticated ?
-    <Navigate to={{ pathname: '/'}}/>
-    :
-    <OktaSignInWidget config={config} onSuccess={onSuccess} onError={onError}/>;
+    return authState.isAuthenticated
+        ? <Navigate to='/' />
+        : <OktaSignInWidget onSuccess={onSuccess} onError={onError} />;
 };
 
 export default LoginWidget;
