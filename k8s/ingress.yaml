@@ -3,17 +3,17 @@ kind: Ingress
 metadata:
   name: paylate-ingress
 spec:
-#  tls:
-#    - hosts:
-#        - paylate.com
-#        - admin-service.paylate.com
-#        - cart-service.paylate.com
-#        - messaging-service.paylate.com
-#        - order-service.paylate.com
-#        - payment-service.paylate.com
-#        - product-service.paylate.com
-#        - review-service.paylate.com
-#      secretName: frontend-tls-secret
+  tls:
+    - hosts:
+        - paylate.com
+        - admin-service.paylate.com
+        - cart-service.paylate.com
+        - messaging-service.paylate.com
+        - order-service.paylate.com
+        - payment-service.paylate.com
+        - product-service.paylate.com
+        - review-service.paylate.com
+      secretName: frontend-tls-secret
   rules:
     - host: admin-service.paylate.com
       http:

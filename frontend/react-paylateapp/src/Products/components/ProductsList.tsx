@@ -4,9 +4,11 @@ import { SingleProduct } from './SingleProduct';
 import { Pagination } from "../../Utils/Pagination";
 import { Spinner } from '../../Utils/Spinner';
 import { useParams } from 'react-router-dom';
+import { useOktaAuth } from '@okta/okta-react';
 
 export const ProductList: React.FC = () => {
     const { partner } = useParams<{ partner?: string }>();
+    const { authState } = useOktaAuth();
     const [products, setProducts] = useState<ProductModel[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [httpError, setHttpError] = useState<string | null>(null);

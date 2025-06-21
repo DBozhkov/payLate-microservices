@@ -5,29 +5,50 @@ import { oktaConfig } from '../lib/oktaConfig';
 const OktaSignInWidget = ({ onSuccess, onError }) => {
     const widgetRef = useRef();
 
-    useEffect(() => {
-        if (!widgetRef.current) {
-            return;
-        }
+    //     useEffect(() => {
+    //         if (!widgetRef.current) {
+    //             return;
+    //         }
+    //
+    //         const widget = new OktaSignIn(oktaConfig);
+    //
+    //
+    //         widget.showSignInToGetTokens({
+    //             el: widgetRef.current,
+    //         })
+    //         .then(onSuccess)
+    //         .catch((err) => {
+    //             console.error('Error displaying the widget: ', err);
+    //             onError(err);
+    //         });
+    //
+    //         return () => widget.remove();
+    //     }, [onSuccess, onError]);
 
+    useEffect(() => {
         const widget = new OktaSignIn(oktaConfig);
-        
 
         widget.showSignInToGetTokens({
-            el: widgetRef.current,
+            el: '#sign-in-widget',
         })
-        .then(onSuccess)
-        .catch((err) => {
-            console.error('Error displaying the widget: ', err);
-            onError(err);
-        });
+            .then(onSuccess)
+            .catch((err) => {
+                console.error('Error displaying the widget: ', err);
+                onError(err);
+            });
 
         return () => widget.remove();
-    }, [onSuccess, onError]);
+    }, []);
+
+    //     return (
+    //         <div className='container mt-5 mb-5'>
+    //             <div ref={widgetRef}></div>
+    //         </div>
+    //     );
 
     return (
         <div className='container mt-5 mb-5'>
-            <div ref={widgetRef}></div>
+            <div id="sign-in-widget"></div>
         </div>
     );
 };

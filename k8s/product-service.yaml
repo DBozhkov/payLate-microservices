@@ -17,7 +17,7 @@ spec:
           image: product-service:latest
           imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 8445
+            - containerPort: 80
 ---
 apiVersion: v1
 kind: Service

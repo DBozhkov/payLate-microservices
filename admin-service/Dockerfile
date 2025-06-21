@@ -8,8 +8,7 @@ WORKDIR /app
 COPY admin-service/target/admin-service.jar app.jar
 
 # Expose the port the application runs on
-EXPOSE 8440
+EXPOSE 80
 
-COPY paylate-microservices.p12 /app/paylate-microservices.p12
 # Run the application
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]

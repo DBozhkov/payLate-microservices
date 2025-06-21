@@ -17,7 +17,7 @@ spec:
           image: admin-service:latest
           imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 8440
+            - containerPort: 80
 ---
 apiVersion: v1
 kind: Service
