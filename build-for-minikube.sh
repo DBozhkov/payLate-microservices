@@ -13,14 +13,16 @@ backend_services=(
   "review-service"
 )
 
-echo "Building and loading backend service images..."
+echo "Building backend service JARs and Docker images..."
 for service in "${backend_services[@]}"; do
-  echo "Building $service:latest..."
-docker build -t "$service:latest" -f "./$service/Dockerfile" .
+  echo "---------------------------------"
+  echo "Building JAR for $service..."
+  (cd "$service" && mvn clean package -DskipTests)
+  echo "Building $service:latest Docker image..."
+  docker build -t "$service:latest" -f "./$service/Dockerfile" .
   echo "Loading $service:latest into Minikube..."
   minikube image load "$service:latest"
   echo "$service:latest processed."
-  echo "---------------------------------"
 done
 
 echo "All backend service images processed."

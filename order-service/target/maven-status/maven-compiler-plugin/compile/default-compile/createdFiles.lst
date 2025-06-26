@@ -1,6 +1,6 @@
 org\payLate\Main.class
 org\payLate\repository\UserOrderRepository.class
-com\paylateapp\config\OrderDataRestConfig.class
+org\payLate\config\OrderDataRestConfig.class
 org\payLate\controllers\OrderController.class
 org\payLate\config\WebClientConfig.class
 org\payLate\utils\JWTExtractor.class
