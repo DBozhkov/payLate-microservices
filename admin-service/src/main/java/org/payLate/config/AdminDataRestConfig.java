@@ -11,7 +11,17 @@ public class AdminDataRestConfig implements RepositoryRestConfigurer {
 
 //    private String allAllowedOrigins = "https://localhost:3000";
 
-    private String[] allAllowedOrigins = {"https://paylate.com", "http://localhost:3000"};
+    private String[] allAllowedOrigins = {
+            "https://paylate.com",
+            "https://localhost:3000",
+            "https://product-service.paylate.com",
+            "https://admin-service.paylate.com",
+            "https://cart-service.paylate.com",
+            "https://messaging-service.paylate.com",
+            "https://order-service.paylate.com",
+            "https://payment-service.paylate.com",
+            "https://review-service.paylate.com",
+    };
     @Override
     public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config, CorsRegistry cors) {
         HttpMethod[] unsupportedActions = {HttpMethod.POST, HttpMethod.PATCH, HttpMethod.DELETE, HttpMethod.PUT};

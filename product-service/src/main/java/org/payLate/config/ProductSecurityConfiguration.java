@@ -3,6 +3,7 @@ package org.payLate.config;
 import com.okta.spring.boot.oauth.Okta;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -25,6 +26,7 @@ public class ProductSecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth ->
                         auth
+                                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                                 .requestMatchers("/api/products/**", "/api/csv/**").permitAll()
                                 .anyRequest().authenticated()
                 )
@@ -39,7 +41,17 @@ public class ProductSecurityConfiguration {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("https://paylate.com", "https://localhost:3000"));
+        configuration.setAllowedOrigins(List.of(
+                "https://paylate.com",
+                "https://localhost:3000",
+                "https://review-service.paylate.com",
+                "https://product-service.paylate.com",
+                "https://admin-service.paylate.com",
+                "https://cart-service.paylate.com",
+                "https://messaging-service.paylate.com",
+                "https://order-service.paylate.com",
+                "https://payment-service.paylate.com"
+        ));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         configuration.setAllowCredentials(true);
