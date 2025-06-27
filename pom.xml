@@ -9,13 +9,13 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>product-service</module>
-        <module>order-service</module>
-        <module>cart-service</module>
-        <module>review-service</module>
-        <module>payment-service</module>
-        <module>admin-service</module>
-        <module>messaging-service</module>
+        <module>backend/product-service</module>
+        <module>backend/order-service</module>
+        <module>backend/cart-service</module>
+        <module>backend/review-service</module>
+        <module>backend/payment-service</module>
+        <module>backend/admin-service</module>
+        <module>backend/messaging-service</module>
     </modules>
 
     <properties>

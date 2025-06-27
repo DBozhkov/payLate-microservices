@@ -7,7 +7,7 @@ SERVICES=(admin-service cart-service messaging-service order-service payment-ser
 for SERVICE in "${SERVICES[@]}"
 do
   echo "Building $SERVICE ..."
-  docker build -t $DOCKER_USER/$SERVICE:latest ./$SERVICE
+  docker build -t $DOCKER_USER/$SERVICE:latest ./backend/$SERVICE
   echo "Pushing $SERVICE ..."
   docker push $DOCKER_USER/$SERVICE:latest
 done

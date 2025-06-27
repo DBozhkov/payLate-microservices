@@ -22,3 +22,55 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 replay_pid*
+
+# IDE specific
+.idea/
+*.iml
+*~
+*.swp
+nbproject/ # Netbeans
+.project # Eclipse
+.classpath # Eclipse
+.settings/ # Eclipse
+*.sublime-workspace # Sublime Text
+*.vscode/ # VS Code
+
+# Environment variables
+.env
+*.env
+env/
+.env.*
+env.local
+.env.local
+.env.*.local
+
+# Build artifacts / Target folders
+target/
+*/target/
+build/
+dist/
+out/
+
+# Certificate files
+paylate.com+1-key.pem
+paylate.com+1.p12
+paylate.com+1.pem
+*.p12
+*.pfx
+*.key
+*.pem
+*.cer
+*.crt
+
+# Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+yarn.lock
+package-lock.json
+
+# Frontend specific (React)
+/frontend/react-paylateapp/build
+/frontend/react-paylateapp/node_modules
+.DS_Store
+```
