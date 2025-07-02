@@ -1,9 +1,0 @@
-org\payLate\Main.class
-org\payLate\services\MessagesService.class
-org\payLate\repository\MessageRepository.class
-org\payLate\config\MessagingSecurityConfiguration.class
-org\payLate\entity\Message.class
-org\payLate\config\MessagingDataRestConfig.class
-org\payLate\utils\JWTExtractor.class
-org\payLate\controllers\MessagesController.class
-org\payLate\requestModels\AdminMessageRequest.class

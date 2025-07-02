@@ -2,7 +2,7 @@
 
 # Ensure minikube is running and the 'minikube' command is in your PATH.
 
-# Backend services
+# Backend services (now under backend/)
 backend_services=(
   "admin-service"
   "cart-service"
@@ -17,9 +17,11 @@ echo "Building backend service JARs and Docker images..."
 for service in "${backend_services[@]}"; do
   echo "---------------------------------"
   echo "Building JAR for $service..."
-  (cd "$service" && mvn clean package -DskipTests)
+  (cd "backend/$service" && mvn clean package -DskipTests)
+
   echo "Building $service:latest Docker image..."
-  docker build -t "$service:latest" -f "./$service/Dockerfile" .
+  docker build -t "$service:latest" -f "./backend/$service/Dockerfile" .
+
   echo "Loading $service:latest into Minikube..."
   minikube image load "$service:latest"
   echo "$service:latest processed."
