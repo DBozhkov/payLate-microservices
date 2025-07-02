@@ -21,14 +21,20 @@ public class AdminController {
     }
 
     @PostMapping("/secure/add/product")
-    public void postProduct(@RequestHeader(value = "Authorization") String token,
-                            @RequestBody AddProductRequest addProductRequest) throws Exception {
-        String admin = JWTExtractor.payloadJWTExtraction(token, "\"userType\"");
-        if (admin == null || !admin.equals("admin")) {
-            throw new Exception("Administration only!!!");
+    public ResponseEntity<?> postProduct(@RequestHeader(value = "Authorization") String token,
+                                         @RequestBody AddProductRequest addProductRequest) {
+        try {
+            String admin = JWTExtractor.payloadJWTExtraction(token, "\"userType\"");
+            if (admin == null || !admin.equals("admin")) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Administration only!!!");
+            }
+            adminService.addProduct(addProductRequest);
+            return ResponseEntity.ok("Product added successfully!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to add product: " + e.getMessage());
         }
-
-        adminService.addProduct(addProductRequest);
     }
 
     @DeleteMapping("/secure/delete/product")

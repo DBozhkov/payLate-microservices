@@ -10,6 +10,7 @@ import org.payLate.entity.AmazonProduct;
 import org.payLate.entity.Author;
 import org.payLate.entity.OlxProduct;
 import org.payLate.repository.*;
+import org.payLate.requestModels.AddProductRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -132,6 +133,51 @@ public class ProductService {
                 .collect(Collectors.toList());
 
         amazonProductRepository.saveAll(amazonProducts);
+    }
+
+    public void addProductForPartner(String partner, AddProductRequest addProductRequest) {
+        switch (partner.toLowerCase()) {
+            case "olx" -> {
+                OlxProductDTO dto = new OlxProductDTO();
+                dto.setProductName(addProductRequest.getProductName());
+                dto.setCategory(addProductRequest.getCategory());
+                dto.setPrice(addProductRequest.getPrice());
+                dto.setImgUrl(addProductRequest.getImgUrl());
+                dto.setDescription(addProductRequest.getDescription());
+                dto.setQuantity(addProductRequest.getQuantity() != null ? addProductRequest.getQuantity().intValue() : 1);
+                dto.setRating(addProductRequest.getRating());
+                dto.setAuthorName(addProductRequest.getAuthorName());
+                dto.setAuthorUrl(addProductRequest.getAuthorUrl());
+                saveOlxProducts(List.of(dto));
+            }
+            case "aliexpress" -> {
+                AliExpressProductDTO dto = new AliExpressProductDTO();
+                dto.setProductName(addProductRequest.getProductName());
+                dto.setCategory(addProductRequest.getCategory());
+                dto.setPrice(addProductRequest.getPrice());
+                dto.setImgUrl(addProductRequest.getImgUrl());
+                dto.setDescription(addProductRequest.getDescription());
+                dto.setQuantity(addProductRequest.getQuantity() != null ? addProductRequest.getQuantity().intValue() : 1);
+                dto.setRating(addProductRequest.getRating());
+                dto.setAuthorName(addProductRequest.getAuthorName());
+                dto.setAuthorUrl(addProductRequest.getAuthorUrl());
+                saveAliexpressProducts(List.of(dto));
+            }
+            case "amazon" -> {
+                AmazonProductDTO dto = new AmazonProductDTO();
+                dto.setProductName(addProductRequest.getProductName());
+                dto.setCategory(addProductRequest.getCategory());
+                dto.setPrice(addProductRequest.getPrice());
+                dto.setImgUrl(addProductRequest.getImgUrl());
+                dto.setDescription(addProductRequest.getDescription());
+                dto.setQuantity(addProductRequest.getQuantity() != null ? addProductRequest.getQuantity().intValue() : 1);
+                dto.setRating(addProductRequest.getRating());
+                dto.setAuthorName(addProductRequest.getAuthorName());
+                dto.setAuthorUrl(addProductRequest.getAuthorUrl());
+                saveAmazonProducts(List.of(dto));
+            }
+            default -> throw new IllegalArgumentException("Unknown partner type: " + partner);
+        }
     }
 
 //    public void increaseProductQuantity(Long productId) throws Exception {
