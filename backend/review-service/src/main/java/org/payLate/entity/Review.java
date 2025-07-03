@@ -26,7 +26,7 @@ public class Review {
     @Column(name = "rating")
     private double rating;
 
-    @Column(name = "base_product_id")
+    @Column(name = "product_id")
     private Long productId;
 
     @Column(name = "review_description")

@@ -34,9 +34,10 @@ public class CartService {
         this.orderServiceWebClient = orderServiceWebClient;
     }
 
-    public void addToCart(String userEmail, Long productId, String partner) throws Exception {
+    public void addToCart(String token, String userEmail, Long productId, String partner) throws Exception {
         Boolean productExists = productServiceWebClient.get()
                 .uri("/api/products/{partner}/{id}/exists", partner, productId)
+                .header("Authorization", token)
                 .retrieve()
                 .bodyToMono(Boolean.class)
                 .block();
@@ -122,11 +123,17 @@ public class CartService {
     }
 
     private ProductDTO fetchProductDetails(Long productId, String partner) {
-        return productServiceWebClient.get()
-                .uri("/api/products/{partner}/{id}", partner, productId)
-                .retrieve()
-                .bodyToMono(ProductDTO.class)
-                .block();
+        try {
+            return productServiceWebClient.get()
+                    .uri("/api/products/{partner}/{id}", partner, productId)
+                    .retrieve()
+                    .bodyToMono(ProductDTO.class)
+                    .block();
+        } catch (Exception e) {
+            System.err.println("Failed to fetch product details for productId=" + productId +
+                    ", partner=" + partner + ": " + e.getMessage());
+            return null;
+        }
     }
 
     public void removeFromCart(String userEmail, Long productId) throws Exception {

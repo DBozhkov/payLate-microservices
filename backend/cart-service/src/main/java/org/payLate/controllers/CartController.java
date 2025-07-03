@@ -19,13 +19,13 @@ public class CartController {
 
     @PostMapping("/add")
     public void addToCart(@RequestHeader(value = "Authorization") String token,
-                          @RequestParam Long productId,
-                          @RequestParam String partner) throws Exception {
+                          @RequestParam("productId") Long productId,
+                          @RequestParam("partner") String partner) throws Exception {
         String userEmail = JWTExtractor.payloadJWTExtraction(token, "\"sub\"");
         if (userEmail == null) {
             throw new Exception("User email is missing");
         }
-        cartService.addToCart(userEmail, productId, partner);
+        cartService.addToCart(token, userEmail, productId, partner);
     }
 
     @GetMapping
@@ -34,7 +34,7 @@ public class CartController {
         if (userEmail == null) {
             throw new Exception("User email is missing");
         }
-        System.out.println("Fetched userEmail: " + userEmail); // Add this line for logging
+        System.out.println("Fetched userEmail: " + userEmail);
         return cartService.getCartItems(userEmail);
     }
 

@@ -28,7 +28,7 @@ public class ProductController {
 
     @PostMapping("/{partner}/add")
     public ResponseEntity<?> addProduct(
-            @PathVariable String partner,
+            @PathVariable("partner") String partner,
             @RequestBody AddProductRequest addProductRequest) {
         try {
             productService.addProductForPartner(partner, addProductRequest);
@@ -37,5 +37,19 @@ public class ProductController {
             e.printStackTrace();
             return ResponseEntity.status(500).body("Failed to add product: " + e.getMessage());
         }
+    }
+
+    @GetMapping("/{partner}/{id}/exists")
+    public ResponseEntity<Boolean> exists(
+            @PathVariable("partner") String partner,
+            @PathVariable("id") Long id) {
+        boolean exists = false;
+        switch (partner.toLowerCase()) {
+            case "amazon" -> exists = productService.amazonProductExists(id);
+            case "olx" -> exists = productService.olxProductExists(id);
+            case "aliexpress" -> exists = productService.aliexpressProductExists(id);
+            case "default" -> exists = productService.productExists(id);
+        }
+        return ResponseEntity.ok(exists);
     }
 }

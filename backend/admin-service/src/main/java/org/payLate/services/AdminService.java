@@ -34,33 +34,52 @@ public class AdminService {
     }
 
     public void deleteProduct(Long productId, String partner) throws Exception {
-        Boolean productExists = productServiceWebClient.get()
-                .uri("/api/products/{partner}/{id}/exists", partner.toLowerCase(), productId)
-                .retrieve()
-                .bodyToMono(Boolean.class)
-                .block();
+        partner = (partner == null) ? "" : partner.toLowerCase();
 
-        if (Boolean.FALSE.equals(productExists)) {
-            throw new Exception("Product not found in product-service!");
+        Boolean productExists = null;
+        try {
+            productExists = productServiceWebClient.get()
+                    .uri("/api/products/{partner}/{id}/exists", partner, productId)
+                    .retrieve()
+                    .bodyToMono(Boolean.class)
+                    .block();
+        } catch (Exception e) {
+            System.err.println("[admin-service] Could not verify product existence: " + e.getMessage());
         }
 
-        cartServiceWebClient.delete()
-                .uri("/api/cart/remove-product/{productId}", productId)
-                .retrieve()
-                .bodyToMono(Void.class)
-                .block();
+        if (Boolean.FALSE.equals(productExists)) {
+            System.err.println("[admin-service] Product not found in product-service, skipping downstream deletes.");
+        }
 
-        reviewServiceWebClient.delete()
-                .uri("/api/reviews/delete-by-product/{productId}", productId)
-                .retrieve()
-                .bodyToMono(Void.class)
-                .block();
+        try {
+            cartServiceWebClient.delete()
+                    .uri("/api/cart/remove-product/{productId}", productId)
+                    .retrieve()
+                    .bodyToMono(Void.class)
+                    .block();
+        } catch (Exception e) {
+            System.err.println("[admin-service] cart-service remove failed: " + e.getMessage());
+        }
 
-        productServiceWebClient.delete()
-                .uri("/api/products/{partner}/{id}", partner.toLowerCase(), productId)
-                .retrieve()
-                .bodyToMono(Void.class)
-                .block();
+        try {
+            reviewServiceWebClient.delete()
+                    .uri("/api/reviews/delete-by-product/{productId}", productId)
+                    .retrieve()
+                    .bodyToMono(Void.class)
+                    .block();
+        } catch (Exception e) {
+            System.err.println("[admin-service] review-service remove failed: " + e.getMessage());
+        }
+
+        try {
+            productServiceWebClient.delete()
+                    .uri("/api/products/{partner}/{id}", partner, productId)
+                    .retrieve()
+                    .bodyToMono(Void.class)
+                    .block();
+        } catch (Exception e) {
+            System.err.println("[admin-service] product-service delete failed: " + e.getMessage());
+        }
     }
 
     public void createOrderForPayLate(String token, String userEmail) throws Exception {

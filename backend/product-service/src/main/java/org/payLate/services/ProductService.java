@@ -180,6 +180,22 @@ public class ProductService {
         }
     }
 
+    public boolean amazonProductExists(Long id) {
+        return amazonProductRepository.existsById(id);
+    }
+
+    public boolean olxProductExists(Long id) {
+        return olxProductRepository.existsById(id);
+    }
+
+    public boolean aliexpressProductExists(Long id) {
+        return aliExpressProductRepository.existsById(id);
+    }
+
+    public boolean productExists(Long id) {
+        return productRepository.existsById(id);
+    }
+
 //    public void increaseProductQuantity(Long productId) throws Exception {
 //        Optional<Product> product = productRepository.findById(productId);
 //

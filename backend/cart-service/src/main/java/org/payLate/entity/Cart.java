@@ -18,8 +18,7 @@ public class Cart {
     @Column(name = "user_email")
     private String userEmail;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "cart_id")
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<CartItem> items = new ArrayList<>();
 
     @Override

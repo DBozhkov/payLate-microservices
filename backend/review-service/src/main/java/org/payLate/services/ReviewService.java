@@ -45,7 +45,9 @@ public class ReviewService {
         review.setProductId(reviewRequest.getProductId());
         review.setRating(reviewRequest.getRating());
         review.setUserEmail(userEmail);
-        reviewRequest.getReviewDescription().ifPresent(review::setReviewDescription);
+        if (reviewRequest.getReviewDescription() != null) {
+            review.setReviewDescription(reviewRequest.getReviewDescription());
+        }
         review.setDate(Date.valueOf(LocalDate.now()));
         reviewRepository.save(review);
     }

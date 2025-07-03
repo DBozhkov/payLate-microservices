@@ -1,38 +1,60 @@
 package org.payLate.utils;
 
 import com.opencsv.CSVReader;
-import com.opencsv.exceptions.CsvException;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.List;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 
 @Component
 public class CSVRunner {
-
-    public JSONArray readCsvToJson(String filePath) {
+    public JSONArray readCsvToJsonFromClasspath(String classpathLocation) {
         JSONArray jsonArray = new JSONArray();
+        try {
+            ClassPathResource resource = new ClassPathResource(classpathLocation);
+            try (
+                    InputStream is = resource.getInputStream();
+                    InputStreamReader reader = new InputStreamReader(is, StandardCharsets.UTF_8);
+                    CSVReader csvReader = new CSVReader(reader)
+            ) {
+                String[] headers = csvReader.readNext();
+                if (headers == null) return jsonArray;
 
-        try (CSVReader csvReader = new CSVReader(new FileReader(filePath))) {
-            List<String[]> csvData = csvReader.readAll();
-            String[] headers = csvData.get(0);
-
-            for (int i = 1; i < csvData.size(); i++) {
-                String[] row = csvData.get(i);
-                JSONObject jsonObject = new JSONObject();
-
-                for (int j = 0; j < headers.length; j++) {
-                    jsonObject.put(headers[j], row[j]);
+                String[] values;
+                while ((values = csvReader.readNext()) != null) {
+                    JSONObject obj = new JSONObject();
+                    for (int i = 0; i < headers.length && i < values.length; i++) {
+                        obj.put(headers[i], values[i]);
+                    }
+                    jsonArray.put(obj);
                 }
-                jsonArray.put(jsonObject);
             }
-        } catch (IOException | CsvException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
+        return jsonArray;
+    }
 
+    public JSONArray readCsvToJson(Reader reader) {
+        JSONArray jsonArray = new JSONArray();
+        try (CSVReader csvReader = new CSVReader(reader)) {
+            String[] headers = csvReader.readNext();
+            if (headers == null) return jsonArray;
+            String[] values;
+            while ((values = csvReader.readNext()) != null) {
+                JSONObject obj = new JSONObject();
+                for (int i = 0; i < headers.length && i < values.length; i++) {
+                    obj.put(headers[i], values[i]);
+                }
+                jsonArray.put(obj);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return jsonArray;
     }
 }

@@ -25,8 +25,8 @@ public class ReviewSecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth ->
                         auth
-                                .requestMatchers("/api/reviews/**").permitAll()
-                                .anyRequest().authenticated()
+                                .requestMatchers("/api/reviews/**", "/reviews/**").permitAll()
+                                .anyRequest().permitAll()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(withDefaults()))
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()));

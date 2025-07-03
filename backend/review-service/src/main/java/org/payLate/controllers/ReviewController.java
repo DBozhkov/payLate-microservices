@@ -20,7 +20,7 @@ public class ReviewController {
 
     @GetMapping("/secure/user/product")
     public Boolean reviewProductByUser(@RequestHeader(value = "Authorization") String token,
-                                       @RequestParam Long productId) throws Exception {
+                                       @RequestParam("productId") Long productId) throws Exception {
         String userEmail = JWTExtractor.payloadJWTExtraction(token, "\"sub\"");
         if (userEmail == null) {
             throw new Exception("User email is missing!");
