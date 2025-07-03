@@ -16,7 +16,7 @@ export const CheckoutPage = () => {
         const fetchCartItems = async () => {
             if (authState && authState.isAuthenticated) {
                 try {
-                    const url = `${process.env.REACT_APP_API}/cart`;
+                    const url = `${process.env.REACT_APP_CART_API_URL}/cart`;
                     const requestOptions = {
                         method: 'GET',
                         headers: {
@@ -62,7 +62,7 @@ export const CheckoutPage = () => {
     const handleRemoveItem = async (productId: number) => {
         if (authState && authState.isAuthenticated) {
             try {
-                const url = `${process.env.REACT_APP_API}/cart/remove?productId=${productId}`;
+                const url = `${process.env.REACT_APP_CART_API_URL}/cart/remove?productId=${productId}`;
                 const requestOptions = {
                     method: 'DELETE',
                     headers: {
@@ -84,7 +84,7 @@ export const CheckoutPage = () => {
     const handlePayLate = async () => {
         if (authState && authState.isAuthenticated) {
             try {
-                const url = `${process.env.REACT_APP_API}/admin/pay-late?userEmail=${authState.accessToken?.claims.sub}`;
+                const url = `${process.env.REACT_APP_ADMIN_API_URL}/admin/pay-late?userEmail=${authState.accessToken?.claims.sub}`;
                 const requestOptions = {
                     method: 'POST',
                     headers: {

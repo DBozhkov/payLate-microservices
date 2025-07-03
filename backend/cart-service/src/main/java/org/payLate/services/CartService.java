@@ -72,7 +72,7 @@ public class CartService {
         cartRepository.save(cart);
     }
 
-    public List<ProductDTO> getCartItems(String userEmail) {
+    public List<ProductDTO> getCartItems(String userEmail, String token) {
         Optional<Cart> cartOptional = cartRepository.findByUserEmail(userEmail);
         if (cartOptional.isEmpty()) {
             System.out.println("Cart not found for user: " + userEmail);
@@ -80,12 +80,12 @@ public class CartService {
         }
 
         return cartOptional.get().getItems().stream()
-                .map(item -> fetchProductDetails(item.getProductId(), item.getPartner()))
+                .map(item -> fetchProductDetails(item.getProductId(), item.getPartner(), token))
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
 
-    public void createOrder(String userEmail) throws Exception {
+    public void createOrder(String userEmail, String token) throws Exception {
         Optional<Cart> cartOptional = cartRepository.findByUserEmail(userEmail);
         if (cartOptional.isEmpty()) {
             throw new Exception("Cart not found");
@@ -99,7 +99,7 @@ public class CartService {
             orderItemRequest.setQuantity(cartItem.getQuantity());
             orderItemRequest.setPartner(cartItem.getPartner());
 
-            ProductDTO product = fetchProductDetails(cartItem.getProductId(), cartItem.getPartner());
+            ProductDTO product = fetchProductDetails(cartItem.getProductId(), cartItem.getPartner(), token);
             if (product != null) {
                 orderItemRequest.setImgUrl(product.getImgUrl());
                 orderItemRequest.setPrice(product.getPrice());
@@ -122,10 +122,11 @@ public class CartService {
         cartRepository.delete(cart);
     }
 
-    private ProductDTO fetchProductDetails(Long productId, String partner) {
+    private ProductDTO fetchProductDetails(Long productId, String partner, String token) {
         try {
             return productServiceWebClient.get()
                     .uri("/api/products/{partner}/{id}", partner, productId)
+                    .header("Authorization", token)
                     .retrieve()
                     .bodyToMono(ProductDTO.class)
                     .block();

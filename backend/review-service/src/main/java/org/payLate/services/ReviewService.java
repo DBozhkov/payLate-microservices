@@ -26,18 +26,32 @@ public class ReviewService {
     }
 
     public void postReview(String userEmail, ReviewRequest reviewRequest, String partner) throws Exception {
+        System.out.println("userEmail: " + userEmail);
+        System.out.println("reviewRequest: " + reviewRequest);
+        System.out.println("partner: " + partner);
+
         Review validateReview = reviewRepository.findByUserEmailAndProductId(userEmail, reviewRequest.getProductId());
         if (validateReview != null) {
+            System.out.println("Review already exists for user " + userEmail + " and product " + reviewRequest.getProductId());
             throw new Exception("Review already created!");
         }
 
-        Boolean productExists = productServiceWebClient.get()
-                .uri("/api/products/{partner}/{id}/exists", partner, reviewRequest.getProductId())
-                .retrieve()
-                .bodyToMono(Boolean.class)
-                .block();
+        Boolean productExists = null;
+        try {
+            productExists = productServiceWebClient.get()
+                    .uri("/api/products/{partner}/{id}/exists", partner, reviewRequest.getProductId())
+                    .retrieve()
+                    .bodyToMono(Boolean.class)
+                    .block();
+        } catch (Exception e) {
+            System.out.println("Error checking product existence: " + e.getMessage());
+            throw new Exception("Error checking product existence: " + e.getMessage(), e);
+        }
+
+        System.out.println("productExists: " + productExists);
 
         if (Boolean.FALSE.equals(productExists)) {
+            System.out.println("Product not found in product-service");
             throw new Exception("Product not found in product-service!");
         }
 
@@ -45,10 +59,9 @@ public class ReviewService {
         review.setProductId(reviewRequest.getProductId());
         review.setRating(reviewRequest.getRating());
         review.setUserEmail(userEmail);
-        if (reviewRequest.getReviewDescription() != null) {
-            review.setReviewDescription(reviewRequest.getReviewDescription());
-        }
+        review.setReviewDescription(reviewRequest.getReviewDescription());
         review.setDate(Date.valueOf(LocalDate.now()));
+        System.out.println("Saving review: " + review);
         reviewRepository.save(review);
     }
 

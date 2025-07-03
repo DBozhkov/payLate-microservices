@@ -1,6 +1,5 @@
 package org.payLate.controllers;
 
-
 import org.payLate.dto.ProductDTO;
 import org.payLate.services.CartService;
 import org.payLate.utils.JWTExtractor;
@@ -35,7 +34,7 @@ public class CartController {
             throw new Exception("User email is missing");
         }
         System.out.println("Fetched userEmail: " + userEmail);
-        return cartService.getCartItems(userEmail);
+        return cartService.getCartItems(userEmail, token);
     }
 
     @DeleteMapping("/remove")
