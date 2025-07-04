@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 @Service
 public class CartService {
@@ -144,12 +145,18 @@ public class CartService {
         userOrderRequest.setUserEmail(userEmail);
         userOrderRequest.setItems(orderItems);
 
-        orderServiceWebClient.post()
-                .uri("/api/orders")
-                .bodyValue(userOrderRequest)
-                .retrieve()
-                .bodyToMono(Void.class)
-                .block();
+        try {
+            orderServiceWebClient.post()
+                    .uri("/api/orders")
+                    .bodyValue(userOrderRequest)
+                    .retrieve()
+                    .bodyToMono(Void.class)
+                    .block();
+        } catch (WebClientResponseException e) {
+            System.out.println("Order Service returned status: " + e.getRawStatusCode());
+            System.out.println("Order Service response body: " + e.getResponseBodyAsString());
+            throw new Exception("Order service error: " + e.getResponseBodyAsString());
+        }
 
         cartRepository.delete(cart);
     }

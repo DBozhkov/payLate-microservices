@@ -2,6 +2,7 @@ package org.payLate.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.payLate.entity.UserOrder;
+import org.payLate.requestModels.UserOrderRequest;
 import org.payLate.services.OrderService;
 import org.payLate.utils.JWTExtractor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,19 @@ public class OrderController {
     @Autowired
     public OrderController(OrderService orderService) {
         this.orderService = orderService;
+    }
+
+    @PostMapping
+    public ResponseEntity<?> createOrder(@RequestBody UserOrderRequest orderRequest) {
+        try {
+            System.out.println("Received order request: " + new ObjectMapper().writeValueAsString(orderRequest));
+            UserOrder order = orderService.saveUserOrder(orderRequest);
+            return ResponseEntity.ok(order);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Error creating order: " + e.getMessage());
+        }
     }
 
     @GetMapping("/previous")
