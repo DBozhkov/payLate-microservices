@@ -1,20 +1,22 @@
 package org.payLate.services;
 
-
 import jakarta.transaction.Transactional;
 import org.payLate.dto.AliExpressProductDTO;
 import org.payLate.dto.AmazonProductDTO;
 import org.payLate.dto.OlxProductDTO;
+import org.payLate.dto.ProductDTO;
 import org.payLate.entity.AliExpressProduct;
 import org.payLate.entity.AmazonProduct;
 import org.payLate.entity.Author;
 import org.payLate.entity.OlxProduct;
+import org.payLate.entity.Product;
 import org.payLate.repository.*;
 import org.payLate.requestModels.AddProductRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,14 +26,10 @@ public class ProductService {
     private String csvFilePath;
 
     private final ProductRepository productRepository;
-
     private final AliExpressProductRepository aliExpressProductRepository;
     private final OlxProductRepository olxProductRepository;
-
     private final AmazonProductRepository amazonProductRepository;
-
     private final AuthorRepository authorRepository;
-
     private final CSVService csvService;
 
     public ProductService(ProductRepository productRepository, OlxProductRepository olxProductRepository,
@@ -45,6 +43,24 @@ public class ProductService {
         this.amazonProductRepository = amazonProductRepository;
     }
 
+
+
+    public Optional<AmazonProductDTO> getAmazonProductDTOById(Long id) {
+        return amazonProductRepository.findById(id).map(this::toAmazonProductDTO);
+    }
+
+    public Optional<OlxProductDTO> getOlxProductDTOById(Long id) {
+        return olxProductRepository.findById(id).map(this::toOlxProductDTO);
+    }
+
+    public Optional<AliExpressProductDTO> getAliExpressProductDTOById(Long id) {
+        return aliExpressProductRepository.findById(id).map(this::toAliExpressProductDTO);
+    }
+
+    public Optional<ProductDTO> getProductDTOById(Long id) {
+        return productRepository.findById(id).map(this::toProductDTO);
+    }
+
     public void saveOlxProducts(List<OlxProductDTO> olxProductDTOs) {
         List<OlxProduct> olxProducts = olxProductDTOs.stream()
                 .map(dto -> {
@@ -56,7 +72,6 @@ public class ProductService {
                     olxProduct.setQuantity(dto.getQuantity() != null ? dto.getQuantity().longValue() : 1L);
                     olxProduct.setImgUrl(dto.getImgUrl());
                     olxProduct.setRating(dto.getRating());
-
                     if (dto.getAuthorName() != null) {
                         Author author = authorRepository.findByAuthorName(dto.getAuthorName())
                                 .orElseGet(() -> {
@@ -67,11 +82,9 @@ public class ProductService {
                                 });
                         olxProduct.setAuthor(author);
                     }
-
                     return olxProduct;
                 })
                 .collect(Collectors.toList());
-
         olxProductRepository.saveAll(olxProducts);
     }
 
@@ -86,7 +99,6 @@ public class ProductService {
                     aliexpressProduct.setQuantity(dto.getQuantity() != null ? dto.getQuantity().longValue() : 1L);
                     aliexpressProduct.setImgUrl(dto.getImgUrl());
                     aliexpressProduct.setRating(dto.getRating());
-
                     if (dto.getAuthorName() != null) {
                         Author author = authorRepository.findByAuthorName(dto.getAuthorName())
                                 .orElseGet(() -> {
@@ -97,11 +109,9 @@ public class ProductService {
                                 });
                         aliexpressProduct.setAuthor(author);
                     }
-
                     return aliexpressProduct;
                 })
                 .collect(Collectors.toList());
-
         aliExpressProductRepository.saveAll(aliexpressProducts);
     }
 
@@ -116,7 +126,6 @@ public class ProductService {
                     amazonProduct.setQuantity(dto.getQuantity() != null ? dto.getQuantity().longValue() : 1L);
                     amazonProduct.setImgUrl(dto.getImgUrl());
                     amazonProduct.setRating(dto.getRating());
-
                     if (dto.getAuthorName() != null) {
                         Author author = authorRepository.findByAuthorName(dto.getAuthorName())
                                 .orElseGet(() -> {
@@ -127,11 +136,9 @@ public class ProductService {
                                 });
                         amazonProduct.setAuthor(author);
                     }
-
                     return amazonProduct;
                 })
                 .collect(Collectors.toList());
-
         amazonProductRepository.saveAll(amazonProducts);
     }
 
@@ -183,40 +190,73 @@ public class ProductService {
     public boolean amazonProductExists(Long id) {
         return amazonProductRepository.existsById(id);
     }
-
     public boolean olxProductExists(Long id) {
         return olxProductRepository.existsById(id);
     }
-
     public boolean aliexpressProductExists(Long id) {
         return aliExpressProductRepository.existsById(id);
     }
-
     public boolean productExists(Long id) {
         return productRepository.existsById(id);
     }
 
-//    public void increaseProductQuantity(Long productId) throws Exception {
-//        Optional<Product> product = productRepository.findById(productId);
-//
-//        if (!product.isPresent()) {
-//            throw new Exception("Product not found!");
-//        }
-//
-//        product.get().setQuantity(product.get().getQuantity() + 1);
-//
-//        productRepository.save(product.get());
-//    }
-//
-//    public void decreaseProductQuantity(Long productId) throws Exception {
-//        Optional<Product> product = productRepository.findById(productId);
-//
-//        if (!product.isPresent() || product.get().getQuantity() <= 0) {
-//            throw new Exception("Product not found or quantity locked!");
-//        }
-//
-//        product.get().setQuantity(product.get().getQuantity() - 1);
-//
-//        productRepository.save(product.get());
-//    }
+    public AmazonProductDTO toAmazonProductDTO(AmazonProduct product) {
+        AmazonProductDTO dto = new AmazonProductDTO();
+        dto.setProductName(product.getProductName());
+        dto.setCategory(product.getCategory());
+        dto.setPrice(product.getPrice());
+        dto.setImgUrl(product.getImgUrl());
+        dto.setDescription(product.getDescription());
+        dto.setQuantity(product.getQuantity() != null ? product.getQuantity().intValue() : 1);
+        dto.setRating(product.getRating());
+        if (product.getAuthor() != null) {
+            dto.setAuthorName(product.getAuthor().getAuthorName());
+            dto.setAuthorUrl(product.getAuthor().getAuthorUrl());
+        }
+        return dto;
+    }
+
+    public OlxProductDTO toOlxProductDTO(OlxProduct product) {
+        OlxProductDTO dto = new OlxProductDTO();
+        dto.setProductName(product.getProductName());
+        dto.setCategory(product.getCategory());
+        dto.setPrice(product.getPrice());
+        dto.setImgUrl(product.getImgUrl());
+        dto.setDescription(product.getDescription());
+        dto.setQuantity(product.getQuantity() != null ? product.getQuantity().intValue() : 1);
+        dto.setRating(product.getRating());
+        if (product.getAuthor() != null) {
+            dto.setAuthorName(product.getAuthor().getAuthorName());
+            dto.setAuthorUrl(product.getAuthor().getAuthorUrl());
+        }
+        return dto;
+    }
+
+    public AliExpressProductDTO toAliExpressProductDTO(AliExpressProduct product) {
+        AliExpressProductDTO dto = new AliExpressProductDTO();
+        dto.setProductName(product.getProductName());
+        dto.setCategory(product.getCategory());
+        dto.setPrice(product.getPrice());
+        dto.setImgUrl(product.getImgUrl());
+        dto.setDescription(product.getDescription());
+        dto.setQuantity(product.getQuantity() != null ? product.getQuantity().intValue() : 1);
+        dto.setRating(product.getRating());
+        if (product.getAuthor() != null) {
+            dto.setAuthorName(product.getAuthor().getAuthorName());
+            dto.setAuthorUrl(product.getAuthor().getAuthorUrl());
+        }
+        return dto;
+    }
+
+    public ProductDTO toProductDTO(Product product) {
+        ProductDTO dto = new ProductDTO();
+        dto.setProductName(product.getProductName());
+        dto.setCategory(product.getCategory());
+        dto.setPrice(product.getPrice());
+        dto.setImgUrl(product.getImgUrl());
+        dto.setDescription(product.getDescription());
+        dto.setQuantity(product.getQuantity() != null ? product.getQuantity().intValue() : 1);
+        dto.setRating(product.getRating());
+        return dto;
+    }
 }

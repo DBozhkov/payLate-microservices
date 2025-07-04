@@ -94,7 +94,8 @@ export const CheckoutPage = () => {
                 };
                 const response = await fetch(url, requestOptions);
                 if (!response.ok) {
-                    throw new Error('Failed to save the order');
+                    const errorText = await response.text();
+                    throw new Error(errorText);
                 }
                 alert('Order has been saved for later payment');
                 navigate('/managependingorders');

@@ -50,12 +50,14 @@ public class AdminController {
     }
 
     @PostMapping("/pay-late")
-    public ResponseEntity<String> saveOrderForPayLate(@RequestHeader(value = "Authorization") String token,
-                                                      @RequestParam String userEmail) {
+    public ResponseEntity<String> saveOrderForPayLate(
+            @RequestHeader(value = "Authorization") String token,
+            @RequestParam("userEmail") String userEmail) { // <--- FIXED
         try {
             adminService.createOrderForPayLate(token, userEmail);
             return ResponseEntity.ok("Order saved successfully");
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error saving order: " + e.getMessage());
         }

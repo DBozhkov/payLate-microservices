@@ -1,5 +1,9 @@
 package org.payLate.controllers;
 
+import org.payLate.dto.AliExpressProductDTO;
+import org.payLate.dto.AmazonProductDTO;
+import org.payLate.dto.OlxProductDTO;
+import org.payLate.dto.ProductDTO;
 import org.payLate.requestModels.AddProductRequest;
 import org.payLate.services.CSVService;
 import org.payLate.services.OlxScraperService;
@@ -8,16 +12,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @CrossOrigin("http://localhost:3000")
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
 
-    private ProductService productService;
-
-    private OlxScraperService olxScraperService;
-
-    private CSVService csvService;
+    private final ProductService productService;
+    private final OlxScraperService olxScraperService;
+    private final CSVService csvService;
 
     @Autowired
     public ProductController(ProductService productService, CSVService csvService, OlxScraperService olxScraperService) {
@@ -51,5 +55,37 @@ public class ProductController {
             case "default" -> exists = productService.productExists(id);
         }
         return ResponseEntity.ok(exists);
+    }
+
+    // GET /api/products/{partner}/{id}
+    @GetMapping("/{partner}/{id}")
+    public ResponseEntity<?> getProductByPartnerAndId(
+            @PathVariable("partner") String partner,
+            @PathVariable("id") Long id) {
+        switch (partner.toLowerCase()) {
+            case "amazon" -> {
+                Optional<AmazonProductDTO> productOpt = productService.getAmazonProductDTOById(id);
+                return productOpt.map(ResponseEntity::ok)
+                        .orElseGet(() -> ResponseEntity.notFound().build());
+            }
+            case "olx" -> {
+                Optional<OlxProductDTO> productOpt = productService.getOlxProductDTOById(id);
+                return productOpt.map(ResponseEntity::ok)
+                        .orElseGet(() -> ResponseEntity.notFound().build());
+            }
+            case "aliexpress" -> {
+                Optional<AliExpressProductDTO> productOpt = productService.getAliExpressProductDTOById(id);
+                return productOpt.map(ResponseEntity::ok)
+                        .orElseGet(() -> ResponseEntity.notFound().build());
+            }
+            case "default" -> {
+                Optional<ProductDTO> productOpt = productService.getProductDTOById(id);
+                return productOpt.map(ResponseEntity::ok)
+                        .orElseGet(() -> ResponseEntity.notFound().build());
+            }
+            default -> {
+                return ResponseEntity.badRequest().body("Unknown partner: " + partner);
+            }
+        }
     }
 }

@@ -12,9 +12,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
+import java.util.Objects;
 import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 public class CartService {
@@ -22,6 +25,8 @@ public class CartService {
     private final CartRepository cartRepository;
     private final WebClient productServiceWebClient;
     private final WebClient orderServiceWebClient;
+
+    private static final Logger logger = LoggerFactory.getLogger(CartService.class);
 
     @Autowired
     public CartService(
@@ -75,23 +80,50 @@ public class CartService {
     public List<ProductDTO> getCartItems(String userEmail, String token) {
         Optional<Cart> cartOptional = cartRepository.findByUserEmail(userEmail);
         if (cartOptional.isEmpty()) {
-            System.out.println("Cart not found for user: " + userEmail);
+            logger.info("Cart not found for user: {}", userEmail);
             return List.of();
         }
 
-        return cartOptional.get().getItems().stream()
+        Cart cart = cartOptional.get();
+
+        // Remove any cart items referencing missing products
+        boolean removedAny = cart.getItems().removeIf(item ->
+                fetchProductDetails(item.getProductId(), item.getPartner(), token) == null
+        );
+        if (removedAny) {
+            cartRepository.save(cart);
+        }
+
+        // Now collect product details for remaining valid items
+        return cart.getItems().stream()
                 .map(item -> fetchProductDetails(item.getProductId(), item.getPartner(), token))
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
 
     public void createOrder(String userEmail, String token) throws Exception {
-        Optional<Cart> cartOptional = cartRepository.findByUserEmail(userEmail);
+
+        List<Cart> allCarts = cartRepository.findAll();
+        System.out.println("=== All carts in DB ===");
+        for (Cart c : allCarts) {
+            System.out.println("Cart for userEmail: [" + c.getUserEmail() + "]");
+        }
+        System.out.println("Requested userEmail: [" + userEmail + "]");
+
+        Optional<Cart> cartOptional = cartRepository.findByUserEmailIgnoreCase(userEmail);
         if (cartOptional.isEmpty()) {
             throw new Exception("Cart not found");
         }
 
         Cart cart = cartOptional.get();
+        System.out.println("Cart found for user: " + userEmail);
+        System.out.println("Cart items size: " + (cart.getItems() != null ? cart.getItems().size() : "null"));
+        if (cart.getItems() == null || cart.getItems().isEmpty()) {
+            throw new Exception("Cart is empty, cannot create order");
+        }
+        for (CartItem item : cart.getItems()) {
+            System.out.println("CartItem: productId=" + item.getProductId() + ", quantity=" + item.getQuantity());
+        }
 
         List<OrderItemRequest> orderItems = cart.getItems().stream().map(cartItem -> {
             OrderItemRequest orderItemRequest = new OrderItemRequest();
@@ -131,8 +163,7 @@ public class CartService {
                     .bodyToMono(ProductDTO.class)
                     .block();
         } catch (Exception e) {
-            System.err.println("Failed to fetch product details for productId=" + productId +
-                    ", partner=" + partner + ": " + e.getMessage());
+            logger.error("Failed to fetch product details for productId={}, partner={}: {}", productId, partner, e.getMessage());
             return null;
         }
     }
@@ -153,6 +184,7 @@ public class CartService {
 
         cartRepository.save(cart);
     }
+
     public void clearCart(String userEmail) throws Exception {
         Optional<Cart> cartOptional = cartRepository.findByUserEmail(userEmail);
         if (cartOptional.isEmpty()) {

@@ -2,9 +2,12 @@ package org.payLate.services;
 
 import org.payLate.requestModels.AddProductRequest;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 @Service
 @Transactional
@@ -86,6 +89,7 @@ public class AdminService {
         cartServiceWebClient.post()
                 .uri("/api/cart/create-order")
                 .header("Authorization", token)
+                .contentType(MediaType.TEXT_PLAIN)
                 .bodyValue(userEmail)
                 .retrieve()
                 .bodyToMono(Void.class)

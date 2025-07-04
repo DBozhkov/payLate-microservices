@@ -35,16 +35,17 @@ export const ProductDetails = () => {
         const fetchProduct = async () => {
             try {
                 const endpoint = partner
-                    ? `${process.env.REACT_APP_PRODUCT_API_URL}/${partner}Products/${productId}`
+                    ? `${process.env.REACT_APP_PRODUCT_API_URL}/${partner}/${productId}`
                     : `${process.env.REACT_APP_PRODUCT_API_URL}/products/${productId}`;
 
-                    console.log(`endpoint: ${endpoint}`);
+                console.log(`endpoint: ${endpoint}`);
 
                 const response = await fetch(endpoint);
                 if (!response.ok) throw new Error("Something went wrong while fetching product.");
 
                 const data = await response.json();
-                const id = data._links.self.href.split("/").pop();
+
+                const id = data.id ?? productId; 
 
                 const loadedProduct = new ProductModel(
                     id,
@@ -202,7 +203,7 @@ export const ProductDetails = () => {
         window.location.href = "/buy";
     }
     async function addToCart() {
-        const partnerValue = partner ?? ""; 
+        const partnerValue = partner ?? "";
         const url = `${process.env.REACT_APP_CART_API_URL}/cart/add?productId=${productId}&partner=${partnerValue}`;
         const requestOptions = {
             method: 'POST',
@@ -211,17 +212,17 @@ export const ProductDetails = () => {
                 'Content-Type': 'application/json',
             },
         };
-    
+
         try {
             const cartResponse = await fetch(url, requestOptions);
-    
+
             if (!cartResponse.ok) {
                 const errorText = await cartResponse.text();
                 console.error(`Add to cart error: ${errorText}`);
                 setDisplayError(true);
                 throw new Error('Something went wrong!');
             }
-    
+
             setDisplayError(false);
             alert('Product added to cart');
         } catch (error: any) {
@@ -302,7 +303,7 @@ export const ProductDetails = () => {
                     An error occurred. Please try again.
                 </div>}
                 <div className="row mt-5">
-                <div className="col-sm-2 col-md-2">
+                    <div className="col-sm-2 col-md-2">
                         {
                             product?.imgUrl ?
                                 <img src={product?.imgUrl} width='226' height='349' alt='Product' />
@@ -324,9 +325,9 @@ export const ProductDetails = () => {
                             <Stars rating={totalStars} size={32} />
                         </div>
                     </div>
-                    <CheckoutReview 
-                        product={product} 
-                        mobile={false} 
+                    <CheckoutReview
+                        product={product}
+                        mobile={false}
                         isAuthenticated={authState?.isAuthenticated}
                         isCheckedOut={isCheckedOut}
                         checkoutProduct={checkoutProduct}
@@ -363,9 +364,9 @@ export const ProductDetails = () => {
                         <Stars rating={totalStars} size={32} />
                     </div>
                 </div>
-                <CheckoutReview 
-                    product={product} 
-                    mobile={true} 
+                <CheckoutReview
+                    product={product}
+                    mobile={true}
                     isAuthenticated={authState?.isAuthenticated}
                     isCheckedOut={isCheckedOut}
                     checkoutProduct={checkoutProduct}
