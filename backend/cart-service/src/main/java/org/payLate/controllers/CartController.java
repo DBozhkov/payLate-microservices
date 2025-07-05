@@ -45,13 +45,17 @@ public class CartController {
     }
 
     @DeleteMapping("/remove")
-    public void removeFromCart(@RequestHeader(value = "Authorization") String token,
-                               @RequestParam("productId") Long productId) throws Exception {
+    public ResponseEntity<?> removeFromCart(@RequestHeader(value = "Authorization") String token,
+                                            @RequestParam("productId") Long productId) throws Exception {
+        if (productId == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid productId");
+        }
         String userEmail = JWTExtractor.payloadJWTExtraction(token, "\"sub\"");
         if (userEmail == null) {
-            throw new Exception("User email is missing");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User email is missing");
         }
         cartService.removeFromCart(userEmail, productId);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/create-order")

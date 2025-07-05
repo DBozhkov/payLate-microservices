@@ -59,7 +59,11 @@ export const CheckoutPage = () => {
         ));
     };
 
-    const handleRemoveItem = async (productId: number) => {
+    const handleRemoveItem = async (productId: number | null | undefined) => {
+        if (!productId || isNaN(Number(productId))) {
+            setHttpError("Invalid product ID for removal.");
+            return;
+        }
         if (authState && authState.isAuthenticated) {
             try {
                 const url = `${process.env.REACT_APP_CART_API_URL}/cart/remove?productId=${productId}`;
@@ -146,7 +150,9 @@ export const CheckoutPage = () => {
                             <p>${item.price}</p>
                         </div>
                         <div className="col-md-2">
-                            <button className="btn btn-danger" onClick={() => handleRemoveItem(item.id)}>Remove</button>
+                            {item.id &&
+                                <button className="btn btn-danger" onClick={() => handleRemoveItem(item.id)}>Remove</button>
+                            }
                         </div>
                     </div>
                 ))}
