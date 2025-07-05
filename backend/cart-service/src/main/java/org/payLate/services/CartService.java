@@ -87,7 +87,6 @@ public class CartService {
 
         Cart cart = cartOptional.get();
 
-        // Remove any cart items referencing missing products
         boolean removedAny = cart.getItems().removeIf(item ->
                 fetchProductDetails(item.getProductId(), item.getPartner(), token) == null
         );
@@ -95,7 +94,6 @@ public class CartService {
             cartRepository.save(cart);
         }
 
-        // Now collect product details for remaining valid items
         return cart.getItems().stream()
                 .map(item -> fetchProductDetails(item.getProductId(), item.getPartner(), token))
                 .filter(Objects::nonNull)
@@ -148,6 +146,7 @@ public class CartService {
         try {
             orderServiceWebClient.post()
                     .uri("/api/orders")
+                    .header("Authorization", token)
                     .bodyValue(userOrderRequest)
                     .retrieve()
                     .bodyToMono(Void.class)

@@ -16,6 +16,6 @@ public class Author {
     @Column(name = "name")
     private String authorName;
 
-    @Column(name = "author_url")
+    @Column(name = "author_url", columnDefinition = "TEXT")
     private String authorUrl;
 }

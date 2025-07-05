@@ -98,7 +98,7 @@ export const CheckoutPage = () => {
                     throw new Error(errorText);
                 }
                 alert('Order has been saved for later payment');
-                navigate('/managependingorders');
+                navigate('/home');
             } catch (error: any) {
                 setHttpError(error.message);
             }

@@ -39,8 +39,8 @@ public class AdminController {
 
     @DeleteMapping("/secure/delete/product")
     public void deleteProduct(@RequestHeader(value = "Authorization") String token,
-                              @RequestParam Long productId,
-                              @RequestParam(required = false) String partner) throws Exception {
+                              @RequestParam("productId") Long productId,
+                              @RequestParam(value = "partner", required = false) String partner) throws Exception {
         String userType = JWTExtractor.payloadJWTExtraction(token, "\"userType\"");
         if (userType == null || !userType.equals("admin")) {
             throw new Exception("Administration only!!!");
