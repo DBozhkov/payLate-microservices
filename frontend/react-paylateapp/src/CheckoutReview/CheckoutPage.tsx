@@ -29,18 +29,23 @@ export const CheckoutPage = () => {
                         throw new Error('Something went wrong!');
                     }
                     const responseData = await response.json();
-                    const products = responseData.map((item: any) => new ProductModel(
-                        item.id,
-                        item.price,
-                        item.productName,
-                        item.authorName,
-                        item.description,
-                        item.quantity ?? 1,
-                        item.category,
-                        item.imgUrl,
-                        item.authorUrl,
-                        item.rating
-                    ));
+
+                    console.log(responseData);
+
+                    const products = responseData
+                        .filter((item: any) => item.id !== null && item.id !== undefined)
+                        .map((item: any) => new ProductModel(
+                            item.id,
+                            item.price,
+                            item.productName,
+                            item.authorName,
+                            item.description,
+                            item.quantity ?? 1,
+                            item.category,
+                            item.imgUrl,
+                            item.authorUrl,
+                            item.rating
+                        ));
                     setCartItems(products);
                     setIsLoading(false);
                 } catch (error: any) {
@@ -79,6 +84,7 @@ export const CheckoutPage = () => {
                     throw new Error('Something went wrong!');
                 }
                 setCartItems(cartItems.filter(item => item.id !== productId));
+                setTimeout(() => navigate('/cart'), 300);
             } catch (error: any) {
                 setHttpError(error.message);
             }

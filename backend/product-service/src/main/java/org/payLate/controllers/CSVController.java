@@ -28,9 +28,11 @@ public class CSVController {
     private CSVService csvService;
 
     @Autowired
-    public CSVController(CSVService csvService, ProductService productService) {
+    public CSVController(CSVService csvService, ProductService productService,
+                         OlxScraperService olxScraperService) {
         this.csvService = csvService;
         this.productService = productService;
+        this.olxScraperService = olxScraperService;
     }
 
     @PostMapping("/importOlxProducts")

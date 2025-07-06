@@ -95,7 +95,15 @@ public class CartService {
         }
 
         return cart.getItems().stream()
-                .map(item -> fetchProductDetails(item.getProductId(), item.getPartner(), token))
+                .map(item -> {
+                    ProductDTO product = fetchProductDetails(item.getProductId(), item.getPartner(), token);
+                    if (product != null) {
+                        product.setId(item.getProductId());
+                        product.setQuantity(item.getQuantity());
+                        product.setPartner(item.getPartner());
+                    }
+                    return product;
+                })
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
