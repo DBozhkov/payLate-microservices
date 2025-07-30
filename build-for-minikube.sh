@@ -1,8 +1,7 @@
 #!/bin/bash
 
-# Ensure minikube is running and the 'minikube' command is in your PATH.
 
-# Backend services (now under backend/)
+# Backend services ()
 backend_services=(
   "admin-service"
   "cart-service"
