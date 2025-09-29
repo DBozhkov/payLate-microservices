@@ -3,7 +3,7 @@ package org.payLate.dto;
 import lombok.Data;
 
 @Data
-public class AliExpressProductDTO {
+public class AliExpressProductDTO implements ProductDTOInterface {
 
     private String productName;
 

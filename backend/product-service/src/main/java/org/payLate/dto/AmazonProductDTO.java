@@ -3,7 +3,7 @@ package org.payLate.dto;
 import lombok.Data;
 
 @Data
-public class AmazonProductDTO {
+public class AmazonProductDTO implements ProductDTOInterface {
 
     private String productName;
 

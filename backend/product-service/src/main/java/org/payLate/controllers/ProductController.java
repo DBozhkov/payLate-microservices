@@ -8,6 +8,8 @@ import org.payLate.requestModels.AddProductRequest;
 import org.payLate.services.CSVService;
 import org.payLate.services.OlxScraperService;
 import org.payLate.services.ProductService;
+import org.payLate.strategy.ProductCreationStrategy;
+import org.payLate.strategy.StrategyFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,12 +24,14 @@ public class ProductController {
     private final ProductService productService;
     private final OlxScraperService olxScraperService;
     private final CSVService csvService;
+    private final StrategyFactory strategyFactory;
 
     @Autowired
-    public ProductController(ProductService productService, CSVService csvService, OlxScraperService olxScraperService) {
+    public ProductController(ProductService productService, CSVService csvService, OlxScraperService olxScraperService, StrategyFactory strategyFactory) {
         this.productService = productService;
         this.csvService = csvService;
         this.olxScraperService = olxScraperService;
+        this.strategyFactory = strategyFactory;
     }
 
     @PostMapping("/{partner}/add")
@@ -35,8 +39,12 @@ public class ProductController {
             @PathVariable("partner") String partner,
             @RequestBody AddProductRequest addProductRequest) {
         try {
-            productService.addProductForPartner(partner, addProductRequest);
+            ProductCreationStrategy strategy = strategyFactory.getStrategy(partner)
+                    .orElseThrow(() -> new IllegalArgumentException("Unknown partner type: " + partner));
+            strategy.createProduct(addProductRequest);
             return ResponseEntity.ok("Product added successfully!");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(500).body("Failed to add product: " + e.getMessage());

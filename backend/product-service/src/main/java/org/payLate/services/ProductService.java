@@ -1,22 +1,17 @@
 package org.payLate.services;
 
 import jakarta.transaction.Transactional;
-import org.payLate.dto.AliExpressProductDTO;
-import org.payLate.dto.AmazonProductDTO;
-import org.payLate.dto.OlxProductDTO;
-import org.payLate.dto.ProductDTO;
-import org.payLate.entity.AliExpressProduct;
-import org.payLate.entity.AmazonProduct;
-import org.payLate.entity.Author;
-import org.payLate.entity.OlxProduct;
-import org.payLate.entity.Product;
+import org.payLate.dto.*;
+import org.payLate.entity.*;
 import org.payLate.repository.*;
 import org.payLate.requestModels.AddProductRequest;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @Service
@@ -62,130 +57,53 @@ public class ProductService {
     }
 
     public void saveOlxProducts(List<OlxProductDTO> olxProductDTOs) {
-        List<OlxProduct> olxProducts = olxProductDTOs.stream()
-                .map(dto -> {
-                    OlxProduct olxProduct = new OlxProduct();
-                    olxProduct.setProductName(dto.getProductName());
-                    olxProduct.setPrice(dto.getPrice());
-                    olxProduct.setDescription(dto.getDescription());
-                    olxProduct.setCategory(dto.getCategory());
-                    olxProduct.setQuantity(dto.getQuantity() != null ? dto.getQuantity().longValue() : 1L);
-                    olxProduct.setImgUrl(dto.getImgUrl());
-                    olxProduct.setRating(dto.getRating());
-                    if (dto.getAuthorName() != null) {
-                        Author author = authorRepository.findByAuthorName(dto.getAuthorName())
-                                .orElseGet(() -> {
-                                    Author currAuthor = new Author();
-                                    currAuthor.setAuthorName(dto.getAuthorName());
-                                    currAuthor.setAuthorUrl(dto.getAuthorUrl());
-                                    return authorRepository.save(currAuthor);
-                                });
-                        olxProduct.setAuthor(author);
-                    }
-                    return olxProduct;
-                })
-                .collect(Collectors.toList());
-        olxProductRepository.saveAll(olxProducts);
+        saveProducts(olxProductDTOs, OlxProduct::new, olxProductRepository);
     }
 
     public void saveAliexpressProducts(List<AliExpressProductDTO> aliexpressProductDTOs) {
-        List<AliExpressProduct> aliexpressProducts = aliexpressProductDTOs.stream()
-                .map(dto -> {
-                    AliExpressProduct aliexpressProduct = new AliExpressProduct();
-                    aliexpressProduct.setProductName(dto.getProductName());
-                    aliexpressProduct.setPrice(dto.getPrice());
-                    aliexpressProduct.setDescription(dto.getDescription());
-                    aliexpressProduct.setCategory(dto.getCategory());
-                    aliexpressProduct.setQuantity(dto.getQuantity() != null ? dto.getQuantity().longValue() : 1L);
-                    aliexpressProduct.setImgUrl(dto.getImgUrl());
-                    aliexpressProduct.setRating(dto.getRating());
-                    if (dto.getAuthorName() != null) {
-                        Author author = authorRepository.findByAuthorName(dto.getAuthorName())
-                                .orElseGet(() -> {
-                                    Author currAuthor = new Author();
-                                    currAuthor.setAuthorName(dto.getAuthorName());
-                                    currAuthor.setAuthorUrl(dto.getAuthorUrl());
-                                    return authorRepository.save(currAuthor);
-                                });
-                        aliexpressProduct.setAuthor(author);
-                    }
-                    return aliexpressProduct;
-                })
-                .collect(Collectors.toList());
-        aliExpressProductRepository.saveAll(aliexpressProducts);
+        saveProducts(aliexpressProductDTOs, AliExpressProduct::new, aliExpressProductRepository);
     }
 
     public void saveAmazonProducts(List<AmazonProductDTO> amazonProductDTOs) {
-        List<AmazonProduct> amazonProducts = amazonProductDTOs.stream()
-                .map(dto -> {
-                    AmazonProduct amazonProduct = new AmazonProduct();
-                    amazonProduct.setProductName(dto.getProductName());
-                    amazonProduct.setPrice(dto.getPrice());
-                    amazonProduct.setDescription(dto.getDescription());
-                    amazonProduct.setCategory(dto.getCategory());
-                    amazonProduct.setQuantity(dto.getQuantity() != null ? dto.getQuantity().longValue() : 1L);
-                    amazonProduct.setImgUrl(dto.getImgUrl());
-                    amazonProduct.setRating(dto.getRating());
-                    if (dto.getAuthorName() != null) {
-                        Author author = authorRepository.findByAuthorName(dto.getAuthorName())
-                                .orElseGet(() -> {
-                                    Author currAuthor = new Author();
-                                    currAuthor.setAuthorName(dto.getAuthorName());
-                                    currAuthor.setAuthorUrl(dto.getAuthorUrl());
-                                    return authorRepository.save(currAuthor);
-                                });
-                        amazonProduct.setAuthor(author);
-                    }
-                    return amazonProduct;
-                })
-                .collect(Collectors.toList());
-        amazonProductRepository.saveAll(amazonProducts);
+        saveProducts(amazonProductDTOs, AmazonProduct::new, amazonProductRepository);
     }
 
-    public void addProductForPartner(String partner, AddProductRequest addProductRequest) {
-        switch (partner.toLowerCase()) {
-            case "olx" -> {
-                OlxProductDTO dto = new OlxProductDTO();
-                dto.setProductName(addProductRequest.getProductName());
-                dto.setCategory(addProductRequest.getCategory());
-                dto.setPrice(addProductRequest.getPrice());
-                dto.setImgUrl(addProductRequest.getImgUrl());
-                dto.setDescription(addProductRequest.getDescription());
-                dto.setQuantity(addProductRequest.getQuantity() != null ? addProductRequest.getQuantity().intValue() : 1);
-                dto.setRating(addProductRequest.getRating());
-                dto.setAuthorName(addProductRequest.getAuthorName());
-                dto.setAuthorUrl(addProductRequest.getAuthorUrl());
-                saveOlxProducts(List.of(dto));
-            }
-            case "aliexpress" -> {
-                AliExpressProductDTO dto = new AliExpressProductDTO();
-                dto.setProductName(addProductRequest.getProductName());
-                dto.setCategory(addProductRequest.getCategory());
-                dto.setPrice(addProductRequest.getPrice());
-                dto.setImgUrl(addProductRequest.getImgUrl());
-                dto.setDescription(addProductRequest.getDescription());
-                dto.setQuantity(addProductRequest.getQuantity() != null ? addProductRequest.getQuantity().intValue() : 1);
-                dto.setRating(addProductRequest.getRating());
-                dto.setAuthorName(addProductRequest.getAuthorName());
-                dto.setAuthorUrl(addProductRequest.getAuthorUrl());
-                saveAliexpressProducts(List.of(dto));
-            }
-            case "amazon" -> {
-                AmazonProductDTO dto = new AmazonProductDTO();
-                dto.setProductName(addProductRequest.getProductName());
-                dto.setCategory(addProductRequest.getCategory());
-                dto.setPrice(addProductRequest.getPrice());
-                dto.setImgUrl(addProductRequest.getImgUrl());
-                dto.setDescription(addProductRequest.getDescription());
-                dto.setQuantity(addProductRequest.getQuantity() != null ? addProductRequest.getQuantity().intValue() : 1);
-                dto.setRating(addProductRequest.getRating());
-                dto.setAuthorName(addProductRequest.getAuthorName());
-                dto.setAuthorUrl(addProductRequest.getAuthorUrl());
-                saveAmazonProducts(List.of(dto));
-            }
-            default -> throw new IllegalArgumentException("Unknown partner type: " + partner);
-        }
+    private <T extends BaseProduct> void saveProducts(
+            List<? extends ProductDTOInterface> dtos,
+            Supplier<T> entitySupplier,
+            JpaRepository<T, Long> repository) {
+
+        List<T> products = dtos.stream()
+                .map(dto -> {
+                    T entity = entitySupplier.get();
+                    entity.setProductName(dto.getProductName());
+                    entity.setPrice(dto.getPrice());
+                    entity.setDescription(dto.getDescription());
+                    entity.setCategory(dto.getCategory());
+                    entity.setQuantity(dto.getQuantity() != null ? dto.getQuantity().longValue() : 1L);
+                    entity.setImgUrl(dto.getImgUrl());
+                    entity.setRating(dto.getRating());
+
+                    if (dto.getAuthorName() != null && !dto.getAuthorName().isBlank()) {
+                        Author author = findOrCreateAuthor(dto.getAuthorName(), dto.getAuthorUrl());
+                        entity.setAuthor(author);
+                    }
+                    return entity;
+                })
+                .collect(Collectors.toList());
+        repository.saveAll(products);
     }
+
+    private Author findOrCreateAuthor(String name, String url) {
+        return authorRepository.findByAuthorName(name)
+                .orElseGet(() -> {
+                    Author newAuthor = new Author();
+                    newAuthor.setAuthorName(name);
+                    newAuthor.setAuthorUrl(url);
+                    return authorRepository.save(newAuthor);
+                });
+    }
+
 
     public boolean amazonProductExists(Long id) {
         return amazonProductRepository.existsById(id);

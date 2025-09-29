@@ -13,7 +13,7 @@ public class Author {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "name")
+    @Column(name = "name", unique = true)
     private String authorName;
 
     @Column(name = "author_url", columnDefinition = "TEXT")
